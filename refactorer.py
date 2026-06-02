@@ -134,7 +134,7 @@ def execute_automated_extraction(metrics_list):
         f.write("@import 'variables_generated';\n\n")
         f.write("\n\n".join(shared_rules))
 
-    lineage_export = {k: " | ".join(set(v)) for k, v in lineage_hooks.items()}
+    lineage_export = {k: list(set(v)) for k, v in lineage_hooks.items()}
     with open(os.path.join(config.OUTPUT_DIR, "lineage.json"), 'w', encoding='utf-8') as f:
         json.dump(lineage_export, f)
 

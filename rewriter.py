@@ -1,73 +1,56 @@
+# -*- coding: utf-8 -*-
 import os
 import json
-import re
 import config
-import diagnostics
 
-def apply_resolution_map(global_var_file_hint=None):
-    diagnostics.log_info("\n[REWRITER] Initializing codebase rewrite sequence...")
+def apply_resolution_map():
+    print("\n[REWRITER] Initializing AST Line-Level codebase rewrite...")
 
     if not os.path.exists(config.RESOLUTION_MAP_FILE):
-        diagnostics.log_error(f"Could not find {config.RESOLUTION_MAP_FILE}. Export it from the Dashboard first.")
+        print(f"[ERROR] Could not find {config.RESOLUTION_MAP_FILE}.")
         return False
 
     with open(config.RESOLUTION_MAP_FILE, 'r', encoding='utf-8') as f:
         mapping = json.load(f)
 
-    if not mapping:
-        diagnostics.log_warning("Resolution map is empty. Cancelling rewrite.")
+    if not mapping or not isinstance(mapping, list):
+        print("[ERROR] Resolution map is empty or not in the required Array format.")
         return False
 
-    diagnostics.log_info(f"Loaded {len(mapping)} value mappings to apply.")
+    print(f"[REWRITER] Processing {len(mapping)} specific AST line mutations...")
 
-    for file in os.listdir(config.SCSS_DIR):
-        if not file.endswith('.scss'):
+    # Group mutations by file to avoid opening/closing files multiple times
+    file_mutations = {}
+    for mut in mapping:
+        f_name = mut['file']
+        if f_name not in file_mutations:
+            file_mutations[f_name] = []
+        file_mutations[f_name].append(mut)
+
+    for filename, mutations in file_mutations.items():
+        src_path = os.path.join(config.SCSS_DIR, filename)
+        out_path = os.path.join(config.APPLIED_DIR, filename)
+
+        if not os.path.exists(src_path):
+            print(f"[WARNING] Source file missing: {filename}")
             continue
 
-        file_path = os.path.join(config.SCSS_DIR, file)
-        out_path = os.path.join(config.APPLIED_DIR, file)
+        with open(src_path, 'r', encoding='utf-8') as src:
+            lines = src.readlines()
 
-        with open(file_path, 'r', encoding='utf-8') as src:
-            content = src.read()
+        # Apply mutations line by line
+        for mut in mutations:
+            line_num = mut.get('line')
+            old_raw = mut.get('raw')
+            new_token = mut.get('mapped')
 
-        # FUZZY MATCH SAFE-LOCK
-        is_global = False
-        if global_var_file_hint and file == global_var_file_hint:
-            is_global = True
-        elif 'var' in file.lower() or 'global' in file.lower():
-            is_global = True
-
-        if is_global:
-            diagnostics.log_info(f"[SAFE-LOCK] Identified {file} as GLOBAL variables file. Appending only.")
-            appends = "\n// --- NEW RESOLVED TOKENS ---\n"
-            for raw_val, new_token in mapping.items():
-                if new_token not in content:
-                    appends += f"{new_token}: {raw_val};\n"
-            content += appends
-        else:
-            diagnostics.log_info(f"[REGEX] Applying overrides to structural file: {file}")
-            for raw_val, new_token in mapping.items():
-                escaped_val = re.escape(raw_val)
-                pattern = r"(:\s*)" + escaped_val + r"(\s*;)"
-                content = re.sub(pattern, r"\g<1>" + new_token + r"\g<2>", content)
+            if line_num and line_num <= len(lines):
+                idx = line_num - 1
+                # Target the specific line and replace the raw hardcoded value
+                lines[idx] = lines[idx].replace(old_raw, new_token)
 
         with open(out_path, 'w', encoding='utf-8') as out:
-            out.write(content)
+            out.writelines(lines)
 
-    if os.path.exists(config.HTML_DIR):
-        for file in os.listdir(config.HTML_DIR):
-            if file.endswith('.html'):
-                with open(os.path.join(config.HTML_DIR, file), 'r', encoding='utf-8') as src:
-                    content = src.read()
-
-                for raw_val, new_token in mapping.items():
-                    escaped_val = re.escape(raw_val)
-                    pattern = r"(:\s*)" + escaped_val + r"(\s*;)"
-                    css_var = f"var(--{new_token.replace('$', '')})"
-                    content = re.sub(pattern, r"\g<1>" + css_var + r"\g<2>", content)
-
-                with open(os.path.join(config.APPLIED_DIR, file), 'w', encoding='utf-8') as out:
-                    out.write(content)
-
-    diagnostics.log_info(f"[SUCCESS] Codebase successfully rewritten to {config.APPLIED_DIR}/")
+    print(f"[SUCCESS] AST Rewrites successfully applied to {config.APPLIED_DIR}/")
     return True
