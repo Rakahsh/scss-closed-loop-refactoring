@@ -1,0 +1,5 @@
+{
+  "colors": { "$brand-primary": "#007bff", "$brand-success": "#10b981", "$brand-dark": "#030305" },
+  "typography": { "$font-base": "16px", "$font-lg": "1.25rem", "$weight-bold": "700" },
+  "spacing": { "$spacing-md": "16px", "$spacing-lg": "24px" }
+}

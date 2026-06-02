@@ -1,0 +1,31 @@
+[Input Directories]
+      ├── /src_scss/ (Raw, messy SCSS)
+      └── /src_html/ (Unbranded components)
+             │
+             ▼
+     [Analyzer / Refactorer Engine]
+             │
+             ├──► Extract Discrepancies
+             ├──► Generate Generic Tokens ($color-extracted-1)
+             └──► Generate Shared Partials
+             │
+             ▼
+   [Visual Audit Generator] ──► Generates visual_audit_vX.html
+             │
+             ▼
+     [Human-in-the-Loop] (Via Browser)
+      ├── Views HTML Sandbox rendered natively.
+      └── Maps tokens in Resolution Studio UI.
+             │
+             ▼
+   [resolution_map.json] (Saved to /config_data/)
+             │
+             ▼
+     [Rewriter Daemon] (Triggered by pressing 'r')
+             │
+             ├──► Searches /src_scss/ for raw values, replaces with mapped $tokens.
+             ├──► Searches /src_html/ for raw values, replaces with inline var(--tokens).
+             │
+             ▼
+     [Output Directory]
+      └── /output_applied/ (Production-Ready Architecture)

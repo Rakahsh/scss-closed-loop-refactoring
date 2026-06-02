@@ -1,0 +1,2 @@
+cssutils==2.11.0
+libsass==0.23.0

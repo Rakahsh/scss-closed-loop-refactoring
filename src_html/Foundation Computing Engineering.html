@@ -1,0 +1,550 @@
+<!-- ============================================================
+     UNIMY — Foundation in Computing & Engineering
+     Course Page BODY (Phase 2 — strict BEM, CodePen Pro ready)
+
+     NOTE (Directive 11): The global <header>/topbar and <footer> are
+     identical across every course page and are intentionally OMITTED
+     here. Maintain them once in the global template. This file contains
+     the course hero + main content stack + apply banner only.
+
+     Fonts: Google Fonts links below.
+     Icons: raw inline <svg> (no external icon CDN needed).
+     Images: absolute https://placehold.co URLs.
+============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ================== COURSE HERO ================== -->
+<section class="course-hero user-custom user-custom--dark user-custom--course-hero" aria-labelledby="course-title">
+    <div class="course-hero__inner">
+        <div class="course-hero__content">
+            <h1 class="course-hero__heading" id="course-title">
+                <span class="course-hero__pre">Foundation in</span>
+                <span class="course-hero__title">Computing &amp; Engineering</span>
+            </h1>
+
+            <p class="course-hero__tagline">
+                Strong foundations.<br>Create Exceptional <br>Technology Professionals.
+            </p>
+
+            <div class="course-hero__body">
+                <p class="course-hero__lede">
+                    One year. The right foundation. A direct path to a degree in computing, engineering, software, cybersecurity, AI, or data science. The Foundation in Computing & Engineering is designed for students who are ready to commit to a future in technology and want to start building it the right way — with strong academics, real technical exposure, and a direct progression route into UNIMY’s full range of undergraduate programmes.
+                </p>
+
+                <div class="course-hero__ctas">
+                    <button class="course-hero__cta button button--primary-purple" type="button">Apply Now
+                        <svg class="button__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <path d="M5 12h14M13 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                    <button class="course-hero__cta button button--secondary-light" type="button">Download Brochure
+                        <svg class="button__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <path d="M12 5v14M5 12l7 7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!--         <aside class="rank-card" aria-label="University ranking">
+          <p class="rank-card__num">#1</p>
+          <p class="rank-card__label">AI-Driven<br>University in<br>Malaysia</p>
+          <p class="rank-card__source">(MyTech 2024)</p>
+        </aside>
+ -->
+                <!-- iconed programme-details column (key-facts pattern) -->
+                <!--       <aside class="course-hero__aside" aria-label="Programme details"> -->
+                <p class="key-title">Your tech career starts here.</p>
+                <ul class="key-facts">
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M12 7v5l3 2" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">1 Year</p>
+                            <p class="key-facts__meta">Duration</p>
+                        </div>
+                    </li>
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                                <rect x="3" y="7" width="18" height="13" rx="2" />
+                                <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">Full-Time</p>
+                            <p class="key-facts__meta">Study Mode</p>
+                        </div>
+                    </li>
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                                <circle cx="12" cy="8" r="6" />
+                                <path d="m8.21 13.89-1.95 7.11L12 17.77 17.74 21l-1.96-7.12" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">UNIMY</p>
+                            <p class="key-facts__meta">Award</p>
+                        </div>
+                    </li>
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <path d="M16 2v4M8 2v4M3 10h18" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">Feb · Apr · Aug</p>
+                            <p class="key-facts__meta">Intakes</p>
+                        </div>
+                    </li>
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <rect x="3" y="3" width="18" height="18" rx="3" />
+                                <path d="m8 12 3 3 5-6" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">50%, 50%</p>
+                            <p class="key-facts__meta">Coursework, Final Examinations</p>
+                        </div>
+                    </li>
+                    <li class="key-facts__item">
+                        <span class="key-facts__icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                                <rect x="4" y="3" width="16" height="14" rx="2" />
+                                <path d="M9 21l3-2 3 2M8 8h8M8 12h5" />
+                            </svg>
+                        </span>
+                        <div class="key-facts__body">
+                            <p class="key-facts__title">R/2/0610/3/0002 (FA3180) 05/28</p>
+                            <p class="key-facts__meta">Accreditation</p>
+                        </div>
+                    </li>
+                </ul>
+                <!--       </aside> -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================== MAIN STACK ================== -->
+<main class="course-main user-custom user-custom--main">
+    <div class="course-main__stack">
+
+        <!-- ============== 1 — FUTURE CAREERS ============== -->
+        <section class="section-card user-custom user-custom--future-careers" aria-labelledby="sec-careers">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">1</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-careers">Future Careers</h2>
+                    <p class="section-header__sub">The first step toward limitless possibilities.</p>
+                </div>
+            </header>
+
+            <p class="section-card__intro">
+                This foundation is your entry point into one of the most in-demand career landscapes in the world. Technology is one of the highest-paying and fastest-growing fields for graduates in Malaysia. The MyDIGITAL blueprint targeted 500,000 digital economy jobs by 2025. Demand for AI and data talent is growing at 103% year-on-year according to PwC’s 2025 Global AI Jobs Barometer. The National Semiconductor Strategy is targeting 60,000 skilled engineers by 2030. Every one of these opportunities starts with the right foundation.
+            </p>
+
+            <p class="section-card__intro">
+                Completing this programme opens direct progression into UNIMY’s full range of undergraduate degrees in computing and engineering — and from there into careers across software development, cybersecurity, AI, data science, robotics, and more. </p>
+
+            <p class="section-card__subtitle">Where This Foundation Takes You</p>
+
+            <div class="careers">
+                <div class="careers__cards">
+                    <article class="info-card">
+                        <p class="info-card__title">Degree Pathways</p>
+                        <ul class="check-list">
+                            <li class="check-list__item">Bachelor of Computer Science (Hons)</li>
+                            <li class="check-list__item">Bachelor of Computer Science (Data Science) with Honours</li>
+                            <li class="check-list__item">Bachelor of Software Engineering (Hons)</li>
+                            <li class="check-list__item">Bachelor of Computer Engineering (Hons)</li>
+                            <li class="check-list__item">Bachelor of Information Technology (Cyber Security) with Honours</li>
+                            <li class="check-list__item">Bachelor of Game Development (Game Technology) with Honours</li>
+                            <li class="check-list__item">Bachelor of Multimedia (Interactive Media) with Honours</li>
+                        </ul>
+                    </article>
+
+                    <article class="info-card">
+                        <p class="info-card__title">Career Destinations After Your Degree</p>
+                        <ul class="check-list check-list--blue">
+                            <li class="check-list__item">Software Engineer or Full Stack Developer</li>
+                            <li class="check-list__item">Cybersecurity Analyst or Ethical Hacker</li>
+                            <li class="check-list__item">Data Scientist or Machine Learning Engineer</li>
+                            <li class="check-list__item">Network or Cloud Infrastructure Engineer</li>
+                            <li class="check-list__item">Robotics and Automation Engineer</li>
+                            <li class="check-list__item">IT Consultant or Systems Analyst</li>
+                            <li class="check-list__item">Electrical Engineer</li>
+                        </ul>
+                    </article>
+                </div>
+
+                <aside class="in-demand" aria-label="In-demand growth statistic">
+                    <p class="in-demand__eyebrow">IN DEMAND</p>
+                    <p class="in-demand__num">+103%</p>
+                    <p class="in-demand__desc">year-on-year growth in AI &amp; data talent demand (PwC 2025)</p>
+                </aside>
+            </div>
+
+            <a class="section-link" href="#">View all degree pathways →</a>
+        </section>
+
+        <!-- ============== 2 — WHY THIS PROGRAMME MATTERS ============== -->
+        <section class="section-card user-custom user-custom--programme" aria-labelledby="sec-programme">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">2</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-programme">Why This Programme Matters</h2>
+                </div>
+            </header>
+
+            <div class="programme">
+                <article class="info-card">
+                    <p class="info-card__title">The Reality</p>
+                    <ul class="dot-list">
+                        <li class="dot-list__item">Malaysia’s technology sector is growing faster than the local talent pipeline can fill — creating a structural shortage of skilled graduates across software, cybersecurity, AI, and engineering</li>
+                        <li class="dot-list__item">59% of technology employers in Malaysia are actively expanding their headcount, and the competition for qualified graduates is intensifying every year</li>
+                        <li class="dot-list__item">A strong foundation in mathematics, computing, and engineering thinking is the single most important determinant of success in any technology degree — and most students who struggle at degree level do so because their foundation was weak</li>
+                        <li class="dot-list__item">Starting with the right pre-university programme is not just about meeting entry requirements — it is about arriving at your degree confident, capable, and ready to perform from day one</li>
+                    </ul>
+                </article>
+
+                <article class="info-card">
+                    <p class="info-card__title">The Education</p>
+                    <p class="info-card__text">This is not a generic pre-university programme with computing modules added on. Every subject in the Foundation in Computing & Engineering is chosen because it directly prepares you for the demands of a technology or engineering degree. Mathematics, physics, programming, digital technology, and critical thinking are taught by experienced technology professionals, not just academics — giving you a first-year experience that already feels like working in the industry.</p>
+                    <p class="info-card__text">No prior coding experience is required. This programme is designed for students starting from scratch, and by the end of it you will have working knowledge of programming, digital systems, electric circuits, calculus, and statistics — the complete foundation for any computing or engineering degree.</p>
+                </article>
+
+                <article class="info-card">
+                    <p class="info-card__title">Subject Tracks by Degree Pathway</p>
+                    <p class="info-card__track-label info-card__track-label--purple">Computer Science, Software Engineering, Data Science, and Cybersecurity</p>
+                    <ul class="check-list">
+                        <li class="check-list__item">Algebra & Trigonometry</li>
+                        <li class="check-list__item">Calculus</li>
+                        <li class="check-list__item">Introduction to Programming</li>
+                        <li class="check-list__item">Probability & Statistics</li>
+                        <li class="check-list__item">Introduction to Digital Technologies</li>
+                        <li class="check-list__item">Computing Fundamentals</li>
+                    </ul>
+                    <p class="info-card__track-label info-card__track-label--blue">Computer Engineering and Robotics</p>
+                    <ul class="check-list check-list--blue">
+                        <li class="check-list__item">Algebra & Trigonometry</li>
+                        <li class="check-list__item">Calculus</li>
+                        <li class="check-list__item">Fundamental Physics</li>
+                        <li class="check-list__item">Electric Circuits & Logic</li>
+                        <li class="check-list__item">Introduction to Programming</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- ============== 3 — AI-NATIVE LEARNING ============== -->
+        <section class="section-card user-custom user-custom--ai-native" aria-labelledby="sec-ai-native">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">3</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-ai-native">The AI-Native Learning Experience</h2>
+                </div>
+            </header>
+
+            <p class="section-card__intro">
+                UNIMY is Malaysia's AI-native university. That identity starts here, from the very first semester of the Foundation programme. Students are introduced to digital technology, computing fundamentals, and programming in an environment where AI tools are part of how learning happens - not a topic saved for later years.
+            </p>
+
+            <ul class="ai-native">
+                <li class="ai-native__item">
+                    <span class="ai-native__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            <path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4A2 2 0 0 0 20 18l-5-9V3M9 3h6" />
+                        </svg>
+                    </span>
+                    <p class="ai-native__title">Industry-Grade Labs from Day One</p>
+                    <p class="ai-native__desc">Train in computer labs and smart classrooms equipped with the latest software, simulation environments, and cybersecurity tools. You learn like a tech professional from your first week.</p>
+                </li>
+                <li class="ai-native__item">
+                    <span class="ai-native__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            <path d="M12 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM3 21a9 9 0 0 1 18 0" />
+                        </svg>
+                    </span>
+                    <p class="ai-native__title">Taught by Real Tech Professionals</p>
+                    <p class="ai-native__desc">Lecturers are experienced practitioners from computing, AI, electronics, and engineering industries. They bring real-world problems into the classroom and give you the professional context that textbooks cannot.</p>
+                </li>
+                <li class="ai-native__item">
+                    <span class="ai-native__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                            <rect x="4" y="3" width="16" height="14" rx="2" />
+                            <path d="M9 21l3-2 3 2M8 8h8M8 12h5" />
+                        </svg>
+                    </span>
+                    <p class="ai-native__title">Coursera for Campus Access</p>
+                    <p class="ai-native__desc">Foundation students have access to Coursera for Campus, enabling them to begin earning microcredentials from Google, IBM, AWS, and Microsoft alongside their foundation studies — building an industry-recognised profile before they even start their degree.</p>
+                </li>
+                <li class="ai-native__item">
+                    <span class="ai-native__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                            <path d="M3 7l9-4 9 4-9 4-9-4zM3 7v6l9 4 9-4V7" />
+                        </svg>
+                    </span>
+                    <p class="ai-native__title">Project & Lab-Based Learning</p>
+                    <p class="ai-native__desc">A mix of lectures, hands-on labs, group projects, and industry-related assignments ensures that learning is active and applied from the start, not passive.</p>
+                </li>
+                <li class="ai-native__item ai-native__item--media">
+                    <figure class="ai-native__figure">
+                        <img class="ai-native__img" src="https://placehold.co/600x600/16204A/B5A0FF/png?text=600x600&font=plus-jakarta-sans" alt="UNIMY AI-native foundation classroom" loading="lazy" width="600" height="600">
+                    </figure>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============== 4 — INDUSTRY PROJECTS & CERTIFICATIONS ============== -->
+        <section class="section-card user-custom user-custom--industry" aria-labelledby="sec-industry">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">4</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-industry">Industry Projects &amp; Certifications</h2>
+                    <p class="section-header__sub">Real exposure. Recognised credentials. From year one.</p>
+                </div>
+            </header>
+
+            <p class="section-card__lede">
+                Industry engagement at UNIMY does not begin at degree level. Foundation students benefit
+                from the institution’s active industry partnerships through access to industry-informed
+                teaching, real-world lab environments, and Coursera for Campus microcredentials from the
+                world’s leading technology companies.
+            </p>
+
+            <div class="industry">
+                <article class="industry__col industry__col--lavender">
+                    <p class="industry__col-title">Industry Partners</p>
+                    <p class="industry__group-label">Technology &amp; Infrastructure</p>
+                    <ul class="partner-chips">
+                        <li class="partner-chips__item">Dell Technologies</li>
+                        <li class="partner-chips__item">MIMOS</li>
+                        <li class="partner-chips__item">Cyberview</li>
+                        <li class="partner-chips__item">Censof</li>
+                        <li class="partner-chips__item">Favoriot</li>
+                        <li class="partner-chips__item">Qwork</li>
+                        <li class="partner-chips__item">Fiber</li>
+                    </ul>
+                    <p class="industry__group-label">National Partners</p>
+                    <ul class="partner-chips">
+                        <li class="partner-chips__item">CyberSecurity Malaysia</li>
+                        <li class="partner-chips__item">TalentCorp</li>
+                        <li class="partner-chips__item">Ministry of Human Resources</li>
+                        <li class="partner-chips__item">Forest Interactive</li>
+                        <li class="partner-chips__item">MIGHT</li>
+                    </ul>
+                </article>
+
+                <article class="industry__col industry__col--lavender">
+                    <p class="industry__col-title">Microcredentials Available Alongside the Foundation</p>
+                    <ul class="check-list">
+                        <li class="check-list__item">Google IT Support Professional Certificate</li>
+                        <li class="check-list__item">IBM Applied AI Professional Certificate</li>
+                        <li class="check-list__item">AWS Cloud Practitioner Essentials</li>
+                        <li class="check-list__item">Microsoft Azure Fundamentals preparation</li>
+                    </ul>
+                    <p class="industry__note">These are not aspirational. They are available to Foundation students through Coursera for Campus and give students an internationally recognised profile before they complete their pre-university studies.</p>
+                    <a class="section-link" href="#">View all certifications →</a>
+                </article>
+
+                <figure class="industry__media">
+                    <img class="industry__img" src="https://placehold.co/900x600/16204A/B5A0FF/png?text=900x600&font=plus-jakarta-sans" alt="Foundation students collaborating with industry mentors" loading="lazy" width="900" height="600">
+                </figure>
+            </div>
+        </section>
+
+        <!-- ============== 5 — CAREER OUTCOMES ============== -->
+        <section class="section-card user-custom user-custom--outcomes" aria-labelledby="sec-outcomes">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">5</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-outcomes">Career Outcomes</h2>
+                </div>
+            </header>
+
+            <div class="outcomes">
+                <div class="outcomes__intro">
+                    <p class="outcomes__lede">The Foundation in Computing &amp; Engineering is not a destination. It is the launchpad.</p>
+                    <p class="outcomes__text">The career outcomes for this programme are defined by where it takes you - and it takes you directly into the degree programmes that lead to the highest-growth, best-compensated careers in Malaysia's technology sector.</p>
+                </div>
+
+                <article class="info-card">
+                    <p class="info-card__text">Students who complete this foundation and progress into a UNIMY undergraduate degree go on to careers in software engineering, cybersecurity, data science, AI, computer engineering, robotics, and digital media.</p>
+                    <p class="info-card__text">The Malaysian technology sector is expanding faster than local universities can produce graduates, and UNIMY’s Foundation students enter that pipeline from the very first year of their education.</p>
+                </article>
+
+                <aside class="progression user-custom user-custom--dark user-custom--progression" aria-label="Progression pathways">
+                    <p class="progression__eyebrow">PROGRESSION PATHWAYS</p>
+                    <p class="progression__intro">Upon completing the Foundation in Computing &amp; Engineering, students can progress directly into the following UNIMY undergraduate programmes, with credit given for the foundation year:</p>
+                    <ul class="progression__list">
+                        <li class="progression__item">Bachelor of Computer Science (Hons)</li>
+                        <li class="progression__item">Bachelor of Computer Science (Data Science) with Honours</li>
+                        <li class="progression__item">Bachelor of Software Engineering (Hons)</li>
+                        <li class="progression__item">Bachelor of Computer Engineering (Hons)</li>
+                        <li class="progression__item">Bachelor of Information Technology (Cyber Security) with Honours</li>
+                        <li class="progression__item">Bachelor of Game Development (Game Technology) with Honours</li>
+                        <li class="progression__item">Bachelor of Multimedia (Interactive Media) with Honours</li>
+                    </ul>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ============== 6 — STUDENT EXPERIENCE ============== -->
+        <section class="section-card user-custom user-custom--experience" aria-labelledby="sec-experience">
+            <header class="section-header">
+                <span class="section-header__badge" aria-hidden="true">6</span>
+                <div class="section-header__body">
+                    <h2 class="section-header__title" id="sec-experience">Student Experience</h2>
+                    <p class="section-header__sub">Where students discover what kind of technologist they want to become.</p>
+                </div>
+            </header>
+
+            <ul class="experience">
+                <li class="experience__item">
+                    <figure class="experience__media">
+                        <img class="experience__img" src="https://placehold.co/400x250/16204A/B5A0FF/png?text=400x250&font=plus-jakarta-sans" alt="Industry-grade computer labs" loading="lazy" width="400" height="250">
+                    </figure>
+                    <div class="experience__body">
+                        <p class="experience__title">Industry-Grade Computer Labs</p>
+                        <p class="experience__desc">State-of-the-art computing facilities and cybersecurity environments, accessible throughout your studies.</p>
+                    </div>
+                </li>
+                <li class="experience__item">
+                    <figure class="experience__media">
+                        <img class="experience__img" src="https://placehold.co/400x250/16204A/B5A0FF/png?text=400x250&font=plus-jakarta-sans" alt="Student clubs and tech communities" loading="lazy" width="400" height="250">
+                    </figure>
+                    <div class="experience__body">
+                        <p class="experience__title">Student Clubs &amp; Tech Communities</p>
+                        <p class="experience__desc">Coding circles, robotics teams, cybersecurity CTF groups and AI enthusiasts.</p>
+                    </div>
+                </li>
+                <li class="experience__item">
+                    <figure class="experience__media">
+                        <img class="experience__img" src="https://placehold.co/400x250/16204A/B5A0FF/png?text=400x250&font=plus-jakarta-sans" alt="Hackathons and competitions" loading="lazy" width="400" height="250">
+                    </figure>
+                    <div class="experience__body">
+                        <p class="experience__title">Hackathons &amp; Competitions</p>
+                        <p class="experience__desc">Build skills and professional exposure from year one.</p>
+                    </div>
+                </li>
+                <li class="experience__item">
+                    <figure class="experience__media">
+                        <img class="experience__img" src="https://placehold.co/400x250/16204A/B5A0FF/png?text=400x250&font=plus-jakarta-sans" alt="Industry mentorship" loading="lazy" width="400" height="250">
+                    </figure>
+                    <div class="experience__body">
+                        <p class="experience__title">Industry Mentorship</p>
+                        <p class="experience__desc">Access to UNIMY’s network of industry professionals for guidance and early connections.</p>
+                    </div>
+                </li>
+                <li class="experience__item">
+                    <figure class="experience__media">
+                        <img class="experience__img" src="https://placehold.co/400x250/16204A/B5A0FF/png?text=400x250&font=plus-jakarta-sans" alt="Campus life" loading="lazy" width="400" height="250">
+                    </figure>
+                    <div class="experience__body">
+                        <p class="experience__title">Campus Life</p>
+                        <p class="experience__desc">Esports, wellness facilities, regular events and a culture built around curiosity.</p>
+                    </div>
+                </li>
+
+            </ul>
+        </section>
+
+        <!-- ============== 7-8-9 — ENTRY / FINANCING / ADVISOR ============== -->
+        <section class="entry-reqs user-custom user-custom--entry-reqs" aria-label="Apply now information">
+            <article class="entry-reqs__col" aria-labelledby="sec-entry">
+                <header class="section-header section-header--compact">
+                    <span class="section-header__badge" aria-hidden="true">7</span>
+                    <div class="section-header__body">
+                        <h2 class="section-header__title" id="sec-entry">Entry Requirements</h2>
+                    </div>
+                </header>
+                <p class="entry-reqs__intro">To be eligible for the Foundation in Computing &amp; Engineering, applicants must meet one of the following:</p>
+                <ul class="check-list">
+                    <li class="check-list__item">Pass SPM / SPMV — credit in any 5 subjects</li>
+                    <li class="check-list__item">Pass IGCSE / O-Level — min Grade C in any 5 subjects</li>
+                    <li class="check-list__item">Pass UEC — min Grade B in any 3 subjects</li>
+                    <li class="check-list__item">Any equivalent qualification recognised by the Government of Malaysia</li>
+                </ul>
+                <p class="entry-reqs__note">Trial examination and forecast results are accepted for early application.</p>
+
+                <div class="entry-reqs__assessment">
+                    <p class="entry-reqs__assessment-title">Assessment Breakdown</p>
+                    <ul class="check-list check-list--blue">
+                        <li class="check-list__item">50% Coursework — assignments, quizzes, projects &amp; presentations</li>
+                        <li class="check-list__item">50% Final Examinations (certain modules assessed 100% by coursework)</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="entry-reqs__col" aria-labelledby="sec-finance">
+                <header class="section-header section-header--compact">
+                    <span class="section-header__badge" aria-hidden="true">8</span>
+                    <div class="section-header__body">
+                        <h2 class="section-header__title" id="sec-finance">Scholarships &amp; Financing</h2>
+                    </div>
+                </header>
+                <p class="entry-reqs__text">UNIMY is committed to making a future-focused education accessible from the very first year. A range of scholarships, bursaries, and financial aid options are available for Foundation students including merit-based scholarships, the DHM Bursary, PTPTN and other government loan schemes, and flexible instalment and payment plan options. Full details are available through the admissions team and UNIMY’s financial aid channels.</p>
+                <a class="section-link" href="#">Explore financing →</a>
+            </article>
+
+            <article class="advisor user-custom user-custom--dark user-custom--advisor" aria-labelledby="sec-advisor">
+                <header class="section-header section-header--on-purple">
+                    <span class="section-header__badge section-header__badge--on-purple" aria-hidden="true">9</span>
+                    <div class="section-header__body">
+                        <h2 class="section-header__title" id="sec-advisor">Speak to a Future Advisor</h2>
+                        <p class="section-header__sub">Get personalised guidance for your future.</p>
+                    </div>
+                </header>
+
+                <ul class="advisor__methods">
+                    <li class="advisor__method">
+                        <span class="advisor__method-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                            </svg>
+                        </span>
+                        <p class="advisor__method-label">Chat on WhatsApp</p>
+                    </li>
+                    <li class="advisor__method">
+                        <span class="advisor__method-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <path d="M16 2v4M8 2v4M3 10h18" />
+                            </svg>
+                        </span>
+                        <p class="advisor__method-label">Book A Consultation</p>
+                    </li>
+                    <li class="advisor__method">
+                        <span class="advisor__method-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" focusable="false">
+                                <path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6" />
+                            </svg>
+                        </span>
+                        <p class="advisor__method-label">Book A Campus Tour</p>
+                    </li>
+                </ul>
+            </article>
+        </section>
+
+        <!-- ============== APPLY BANNER ============== -->
+        <section class="apply-banner user-custom user-custom--dark user-custom--apply-banner" aria-label="Apply now">
+            <p class="apply-banner__title">Ready to build your future in computing &amp; engineering?</p>
+            <button class="apply-banner__cta button button--primary-purple" type="button">Apply Now
+                <svg class="button__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+            </button>
+        </section>
+
+    </div>
+</main>
