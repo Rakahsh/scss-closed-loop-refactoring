@@ -30,6 +30,16 @@ def get_source_scss_files():
                 scss_files[f] = file.read()
     return scss_files
 
+# --- NEW MODULE FOR TRACEABILITY ---
+def get_selector_map():
+    path = os.path.join(config.OUTPUT_DIR, "selector_map.json")
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            try: return json.load(f)
+            except: pass
+    return {}
+# -----------------------------------
+
 def update_api_payload(scss_content, html_snippets, _, global_scss_content=""):
     brand_guide_json = {}
     if os.path.exists(config.BRAND_GUIDE_FILE):
@@ -44,7 +54,8 @@ def update_api_payload(scss_content, html_snippets, _, global_scss_content=""):
         "html_snippets": html_snippets if html_snippets else "<div class='empty-state'>Drop your .html files into /src_html/ to see them rendered here.</div>",
         "compiled_css_data": get_compiled_data(),
         "lineage": get_lineage_data(),
-        "source_scss_files": get_source_scss_files()
+        "source_scss_files": get_source_scss_files(),
+        "selector_map": get_selector_map() # Safely injected here
     }
 
     data_path = os.path.join(config.REPORT_DIR, "api_data.json")

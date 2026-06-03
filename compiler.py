@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
-import time
-import threading
 import sass
 import config
 import diagnostics
+import json
+import re
+import sys
+import time
+import threading
 
 # --- PROGRESS INDICATOR UTILITY ---
 class Spinner:
@@ -39,46 +41,72 @@ class Spinner:
 
 def build_scss_tree():
     try:
-        diagnostics.log_info("Initializing SCSS Compilation with Auto-Injection...")
+        diagnostics.log_info("Initializing SCSS Compilation with Auto-Injection & Shadow Mapping...")
 
         # Self-Healing: Ensure directories exist
         os.makedirs(config.SOURCE_DIR, exist_ok=True)
+        os.makedirs(config.OUTPUT_DIR, exist_ok=True)
 
         # Check if the global variable file exists to inject
         global_var_file = "_variable.scss"
         global_var_path = os.path.join(config.SCSS_DIR, global_var_file)
         has_globals = os.path.exists(global_var_path)
 
-        files_to_compile = [f for f in os.listdir(config.SCSS_DIR) if f.endswith('.scss') and not f.startswith('_')]
+        selector_map = {}
 
-        # Start Progress Indicator
-        spinner = Spinner(f"Compiling {len(files_to_compile)} SCSS components...")
+        spinner = Spinner("Compiling & Shadow-Mapping SCSS components...")
         spinner.start()
 
-        for file in files_to_compile:
-            src_path = os.path.join(config.SCSS_DIR, file)
-            out_path = os.path.join(config.SOURCE_DIR, file.replace('.scss', '.css'))
+        for file in os.listdir(config.SCSS_DIR):
+            if file.endswith('.scss') and not file.startswith('_'):
+                src_path = os.path.join(config.SCSS_DIR, file)
+                out_path = os.path.join(config.SOURCE_DIR, file.replace('.scss', '.css'))
 
-            with open(src_path, 'r', encoding='utf-8') as src:
-                scss_string = src.read()
+                with open(src_path, 'r', encoding='utf-8') as src:
+                    scss_string = src.read()
 
-            # --- AUTO-INJECTOR ---
-            if has_globals and "@import 'variable'" not in scss_string and '@import "_variable"' not in scss_string:
-                scss_string = "@import '" + global_var_file + "';\n" + scss_string
+                injected_offset = 0
+                # --- AUTO-INJECTOR ---
+                # Prepend the variables file directly into memory if it exists
+                if has_globals and "@import 'variable'" not in scss_string and '@import "_variable"' not in scss_string:
+                    scss_string = "@import '" + global_var_file + "';\n" + scss_string
+                    injected_offset = 1
 
-            # Compile from the in-memory string
-            compiled_css = sass.compile(
-                string=scss_string,
-                include_paths=[config.SCSS_DIR],
-                output_style='expanded'
-            )
+                # Compile from the in-memory string (Source Maps removed: Legacy dependency)
+                compiled_css = sass.compile(
+                    string=scss_string,
+                    include_paths=[config.SCSS_DIR],
+                    output_style='expanded'
+                )
 
-            with open(out_path, 'w', encoding='utf-8') as out:
-                out.write(compiled_css)
+                with open(out_path, 'w', encoding='utf-8') as out:
+                    out.write(compiled_css)
 
-        # Stop Progress Indicator
+                # --- SHADOW COMPILER FOR FULL-STACK TRACEABILITY ---
+                # Runs an isolated compile step to map SCSS lines to compiled CSS selectors safely
+                try:
+                    map_css = sass.compile(
+                        string=scss_string,
+                        include_paths=[config.SCSS_DIR],
+                        output_style='expanded',
+                        source_comments=True
+                    )
+                    pattern = re.compile(r'/\*\s*line\s+(\d+).*?\*/\s*([^{]+)\s*{', re.MULTILINE)
+                    file_map = {}
+                    for match in pattern.finditer(map_css):
+                        line_num = int(match.group(1)) - injected_offset
+                        if line_num > 0:
+                            selector = match.group(2).strip().replace('\n', ' ')
+                            file_map[str(line_num)] = selector
+                    selector_map[file] = file_map
+                except Exception:
+                    pass # Fail silently, preserving primary production build
+
+        with open(os.path.join(config.OUTPUT_DIR, "selector_map.json"), "w", encoding='utf-8') as f:
+            json.dump(selector_map, f)
+
         spinner.stop()
-        diagnostics.log_info(f"SCSS Compilation successful. ({len(files_to_compile)} files generated via Auto-Injector)")
+        diagnostics.log_info("SCSS Compilation successful. CSS & Maps generated via Auto-Injector.")
         return True
 
     except sass.CompileError as e:
