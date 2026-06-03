@@ -32,8 +32,8 @@
         .code-editor textarea { flex: 1; background: transparent; color: var(--text-main); border: none; padding: 16px; font-size: 0.8rem; resize: none; outline: none; line-height: 1.5; white-space: pre; overflow: auto; min-height: 0; z-index: 15; caret-color: #fff; }
 
         /* LINE CLICK UX Upgrades */
-        #source-lines div { cursor: pointer; transition: all 0.1s; padding-right: 4px; }
-        #source-lines div:hover { color: var(--accent-neon); font-weight: bold; background: rgba(57, 255, 20, 0.1); border-right: 2px solid var(--accent-neon); }
+        #source-lines div { cursor: pointer; transition: all 0.1s; padding-right: 4px; border-right: 2px solid transparent; }
+        #source-lines div:hover { color: var(--accent-neon); font-weight: bold; background: rgba(57, 255, 20, 0.1); border-right-color: var(--accent-neon); }
 
         .editor-overlay { position: absolute; top: 16px; left: 56px; right: 0; bottom: 0; pointer-events: none; white-space: pre; font-size: 0.8rem; font-family: var(--font-mono); line-height: 1.5; overflow: hidden; z-index: 5; padding: 0 16px; color: transparent;}
         .highlight-line { background-color: rgba(56, 189, 248, 0.15); width: 100%; display: block; border-left: 2px solid rgba(56, 189, 248, 0.8); padding-left: 4px; margin-left: -6px; }
@@ -452,39 +452,44 @@
     document.getElementById('source-lines').addEventListener('click', (e) => {
         if (e.target.dataset.line) {
             document.getElementById('source-goto-input').value = e.target.dataset.line;
-            jumpToLine();
+            jumpToLine(true); // <--- TRUE: Triggers HTML Sandbox
         }
     });
 
-    function jumpToLine() {
+    function jumpToLine(triggerInspectorMap = false) {
         const line = parseInt(gotoInput.value);
-        if(!line || line < 1) return;
+        if (!line || line < 1) return;
         const lines = sourceTa.value.split('\n');
         if (line > lines.length) return;
 
         let charIdx = 0;
-        for(let i = 0; i < line - 1; i++) charIdx += lines[i].length + 1;
+        for (let i = 0; i < line - 1; i++) charIdx += lines[i].length + 1;
 
         sourceTa.focus();
-        sourceTa.setSelectionRange(charIdx, charIdx + lines[line-1].length);
+        sourceTa.setSelectionRange(charIdx, charIdx + lines[line - 1].length);
         sourceTa.scrollTop = ((line - 1) * 19.2) - (sourceTa.clientHeight / 2);
 
         sourceOverlay.innerHTML = generateOverlayContent(sourceTa.value, null, line);
 
-        const filename = document.getElementById('source-file-select').value;
-        triggerInspector(filename, line);
+        // Action: Only trigger the HTML Sandbox HUD if manually clicked
+        if (triggerInspectorMap) {
+            const filename = document.getElementById('source-file-select').value;
+            triggerInspector(filename, line);
+        }
     }
 
-    gotoBtn.addEventListener('click', jumpToLine);
-    gotoInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') jumpToLine(); });
+    gotoBtn.addEventListener('click', () => jumpToLine(true));
+    gotoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') jumpToLine(true); });
 
-    window.jumpToSource = function(filename, lineNumber) {
+    window.jumpToSource = function (filename, lineNumber) {
         document.getElementById('source-panel-container').classList.add('active');
         const select = document.getElementById('source-file-select');
         select.value = filename;
         select.dispatchEvent(new Event('change'));
         document.getElementById('source-goto-input').value = lineNumber;
-        setTimeout(() => jumpToLine(), 50);
+
+        // Action: Pass false to prevent programmatic tab-switching
+        setTimeout(() => jumpToLine(false), 50);
     }
 
     document.getElementById('btn-toggle-sidebar').addEventListener('click', () => {
