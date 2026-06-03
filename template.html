@@ -12,6 +12,7 @@
             --border: #334155; --text-main: #f8fafc; --text-muted: #94a3b8;
             --accent-pink: #f43f5e; --accent-green: #10b981; --accent-blue: #38bdf8;
             --accent-orange: #f59e0b; --accent-purple: #a855f7; --accent-neon: #39ff14;
+            --mapped-row: rgba(16, 185, 129, 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,20 +28,27 @@
         .hud-tabs { -ms-overflow-style: none; scrollbar-width: none; }
 
         .code-editor { display: flex; flex: 1; background: var(--bg-editor); overflow: hidden; position: relative; min-height: 0; }
-        .line-numbers { padding: 16px 8px; background: #0f172a; color: #475569; font-size: 0.8rem; text-align: right; user-select: none; overflow: hidden; border-right: 1px solid var(--border); font-family: var(--font-mono); line-height: 1.5; min-width: 40px; }
-        .code-editor textarea { flex: 1; background: transparent; color: var(--text-main); border: none; padding: 16px; font-size: 0.8rem; resize: none; outline: none; line-height: 1.5; white-space: pre; overflow: auto; min-height: 0; }
+        .line-numbers { padding: 16px 8px; background: #0f172a; color: #475569; font-size: 0.8rem; text-align: right; user-select: none; overflow: hidden; border-right: 1px solid var(--border); font-family: var(--font-mono); line-height: 1.5; min-width: 40px; z-index: 20; }
+        .code-editor textarea { flex: 1; background: transparent; color: var(--text-main); border: none; padding: 16px; font-size: 0.8rem; resize: none; outline: none; line-height: 1.5; white-space: pre; overflow: auto; min-height: 0; z-index: 15; caret-color: #fff; }
+
+        .editor-overlay { position: absolute; top: 16px; left: 56px; right: 0; bottom: 0; pointer-events: none; white-space: pre; font-size: 0.8rem; font-family: var(--font-mono); line-height: 1.5; overflow: hidden; z-index: 5; padding: 0 16px; color: transparent;}
+        .highlight-line { background-color: rgba(56, 189, 248, 0.15); width: 100%; display: block; border-left: 2px solid rgba(56, 189, 248, 0.8); padding-left: 4px; margin-left: -6px; }
+        .highlight-text { background-color: rgba(245, 158, 11, 0.4); border-radius: 2px;}
 
         .global-top-bar { background: var(--bg-panel); border-bottom: 2px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-        .top-bar-header { padding: 8px 16px; background: #0f172a; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); }
+        .top-bar-header { padding: 8px 16px; background: #0f172a; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); z-index: 30;}
         .top-bar-header h2 { font-size: 0.75rem; color: var(--accent-blue); text-transform: uppercase; margin: 0; }
 
-        .global-editor-wrapper { display: none; height: 250px; min-height: 100px; max-height: 400px; resize: vertical; overflow: auto; border-bottom: 1px solid var(--border); }
+        .global-editor-wrapper { display: none; height: 250px; min-height: 100px; max-height: 400px; resize: vertical; overflow: auto; border-bottom: 1px solid var(--border); position: relative; }
         .global-top-bar.expanded .global-editor-wrapper { display: flex; }
 
         .hud-layout { display: flex; width: 100%; flex: 1; background: var(--border); overflow: hidden; min-height: 0; }
         .sidebar-panel { background: var(--bg-panel); display: flex; flex-direction: column; height: 100%; width: 350px; min-width: 150px; resize: horizontal; overflow: auto; transition: width 0.3s ease, min-width 0.3s ease; }
         .sidebar-panel.collapsed { width: 0px !important; min-width: 0px !important; overflow: hidden; border: none; }
         .main-panel { background: var(--bg-editor); display: flex; flex-direction: column; height: 100%; flex: 1; overflow: hidden; border-left: 1px solid var(--border); min-height: 0; }
+
+        .source-panel { display: none; background: var(--bg-panel); flex-direction: column; height: 100%; width: 650px; min-width: 500px; resize: horizontal; overflow: auto; border-left: 1px solid var(--border); }
+        .source-panel.active { display: flex; }
 
         .panel-header { padding: 12px 16px; border-bottom: 1px solid var(--border); background: #0f172a; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
         .header-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -73,8 +81,15 @@
         .res-table th:nth-child(2), .res-table td:nth-child(2) { width: 35%; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
         .res-table th:nth-child(3), .res-table td:nth-child(3) { width: 40%; }
 
-        .parent-row { background: var(--bg-editor); }
-        .child-override-row { background: #0b0f19; }
+        .parent-row { background: var(--bg-editor); transition: background 0.3s, box-shadow 0.2s; cursor: pointer; }
+        .parent-row.has-mapping { background: var(--mapped-row); }
+        /* NEW: Active focus state */
+        .parent-row.active-row { background-color:rgb(56 135 248 / 13%); box-shadow: inset 5px 0 0 0 var(--accent-neon); }
+
+        .child-override-row { background: #0b0f19; transition: background 0.3s; }
+        .child-override-row.has-mapping { background: rgb(70 120 137 / 10%); }
+        /* ADD THIS LINE: Active focus state for child rows */
+        .child-override-row.active-row { background-color:rgb(56 135 248 / 13%); box-shadow: inset 6px 0 0 0 var(--accent-neon); }
         .child-override-row td { padding-top: 8px; padding-bottom: 8px; }
 
         .res-swatch { display: inline-block; vertical-align: middle; }
@@ -83,6 +98,9 @@
         .editable-node:focus { outline: none; border-bottom-color: #38bdf8; background-color: rgba(15, 23, 42, 0.9); }
         select.editable-node, input.editable-node { display: inline-block; }
         select.editable-node { appearance: none; padding-right: 24px; }
+
+        optgroup { background: #0f172a; color: var(--accent-blue); font-family: var(--font-sans); font-weight: bold; }
+        option { background: #1e293b; color: #f8fafc; font-family: var(--font-mono); font-weight: normal; }
 
         .tree-line { position: relative; padding-left: 20px; display: flex; align-items: center; gap: 6px; width: 100%; margin-bottom: 4px; }
         .tree-line::before { content: ''; position: absolute; top: -10px; left: 6px; border-left: 1px solid #334155; border-bottom: 1px solid #334155; width: 10px; height: 24px; border-bottom-left-radius: 4px; }
@@ -93,7 +111,7 @@
         .threat-node-safe { border-left: 2px solid transparent; }
         .threat-node-safe:hover { background-color: rgba(30, 41, 59, 0.3); }
 
-        .suggestion-badge { margin-top: 8px; font-size: 0.65rem; padding: 4px 8px; border-radius: 4px; display: inline-block; cursor: pointer; transition: background 0.2s; }
+        .suggestion-badge { margin-top: 8px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; display: inline-block; cursor: pointer; transition: background 0.2s; }
         .suggestion-badge:hover { filter: brightness(1.2); }
         .suggestion-badge.high { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
         .suggestion-badge.med { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.3); }
@@ -109,26 +127,6 @@
         .tooltip-container .tooltip-text.active { visibility: visible; opacity: 1; pointer-events: auto; }
         .lineage-icon { font-size: 0.85rem; color: var(--accent-blue); cursor: pointer; padding: 2px 4px; border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; }
         .lineage-icon:hover { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); }
-
-        .accordion-item { border: 1px solid var(--border); margin-bottom: 8px; border-radius: 6px; background: var(--bg-card); overflow: hidden; flex-shrink: 0; }
-        .accordion-header { padding: 10px 16px; background: #0f172a; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .category-title { font-weight: 600; color: var(--accent-purple); text-transform: uppercase; font-size: 0.85rem; }
-        .token-count { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; }
-        .accordion-body { display: none; padding: 16px; }
-        .accordion-item.active .accordion-body { display: block; }
-
-        .token-grid-colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .token-card-color { background: var(--bg-darker); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-        .swatch-color { height: 60px; width: 100%; border-bottom: 1px solid var(--border); }
-        .token-grid-typo { display: flex; flex-direction: column; gap: 8px; }
-        .token-card-typo { background: var(--bg-darker); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-        .typo-preview-box { font-family: system-ui, sans-serif; color: #fff; line-height: 1; flex: 1; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .token-grid-measure { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-        .token-card-measure { background: var(--bg-darker); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .measure-bar { background: var(--accent-green); height: 12px; border-radius: 2px; }
-        .radii-box { background: var(--accent-pink); width: 100%; height: 60px; border: 1px solid rgba(255,255,255,0.2); }
-        .token-info { padding: 8px; font-size: 0.7rem; display: flex; flex-direction: column; gap: 4px; }
-        .token-name { font-weight: 600; color: var(--text-main); }
 
         .matrix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         .matrix-card { border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 120px; border: 1px solid var(--border); background: var(--bg-panel); }
@@ -154,6 +152,7 @@
         <div class="global-editor-wrapper code-editor">
             <div class="line-numbers" id="global-lines"></div>
             <textarea id="global-scss-input" readonly spellcheck="false">Loading...</textarea>
+            <div id="global-editor-overlay" class="editor-overlay"></div>
         </div>
     </div>
 
@@ -186,71 +185,95 @@
 
           <nav class="hud-tabs">
             <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+1]</span></button>
-            <button class="tab-btn" data-target="view-source-scss" id="tab-source-btn">2. SOURCE SCSS <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+2]</span></button>
-            <button class="tab-btn" data-target="view-contrast">3. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+3]</span></button>
-            <button class="tab-btn" data-target="view-sandbox">4. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+4]</span></button>
+            <button class="tab-btn" data-target="view-contrast">2. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+2]</span></button>
+            <button class="tab-btn" data-target="view-sandbox">3. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+3]</span></button>
           </nav>
         </header>
 
         <style id="compiled-structural-styles"></style>
         <style id="pipeline-styles"></style>
 
-        <div class="preview-panel" style="padding: 0;">
-          <div id="view-resolution" class="view-module active" style="padding: 24px; overflow-y: auto;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                <div>
-                    <h3 style="color: var(--accent-blue); margin-bottom: 8px;">Map Tokens to Brand Guide (AST Line Mode)</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Set bulk maps in the primary row, or expand to override exact file-lines securely inline.</p>
-                </div>
-            </div>
+        <div class="preview-panel" style="padding: 0; flex-direction: row; display: flex;">
 
-            <table class="res-table" style="margin-top:0;">
-                <thead><tr><th>Extracted Raw Value</th><th>Visual Value Assessment</th><th>Bulk Mapping & Line Overrides</th></tr></thead>
-                <tbody id="resolution-tbody"></tbody>
-            </table>
+          <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+              <div id="view-resolution" class="view-module active" style="padding: 24px; overflow-y: auto; flex: 1;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <h3 style="color: var(--accent-blue); margin-bottom: 8px;">Map Tokens to Brand Guide (AST Line Mode)</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Set bulk maps in the primary row, or expand to override exact file-lines securely inline.</p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px; background: #0f172a; border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; width: fit-content;">
+                    <span style="color: var(--text-muted); font-size: 0.75rem;">Filter Overrides:</span>
+                    <select id="override-category" class="font-mono" style="padding: 4px 8px; font-size: 0.7rem; border: none; border-right: 1px solid var(--border); background: transparent; color: var(--accent-blue); outline:none; cursor: pointer;">
+                        <option value="">ALL CATEGORIES</option>
+                        <option value="Colors">COLORS</option>
+                        <option value="Typography">TYPOGRAPHY</option>
+                        <option value="Spacing">SPACING</option>
+                        <option value="Borders">BORDERS</option>
+                        <option value="Sizing">SIZING</option>
+                        <option value="Shadows">SHADOWS</option>
+                        <option value="Misc">MISC</option>
+                    </select>
+                    <input type="text" id="override-search" class="font-mono" style="width: 250px; padding: 4px 8px; font-size: 0.7rem; border: none; background: transparent; color: #fff; outline:none;" placeholder="Search file, token, or value..." />
+                </div>
+
+                <table class="res-table" style="margin-top:0;">
+                    <thead><tr><th>Extracted Raw Value</th><th>Visual Value Assessment</th><th>Bulk Mapping & Line Overrides</th></tr></thead>
+                    <tbody id="resolution-tbody"></tbody>
+                </table>
+              </div>
+
+              <div id="view-contrast" class="view-module" style="padding: 24px; overflow-y: auto; flex: 1;">
+                <h3 style="color: var(--accent-orange); margin-bottom: 16px;">WCAG Contrast Scoring (Colors)</h3>
+                <div id="contrast-matrix-container" class="matrix-grid"></div>
+              </div>
+
+              <div id="view-sandbox" class="view-module" style="height: 100%; min-height: 0; flex: 1;">
+                 <div style="padding: 8px 16px; background: #0f172a; border-bottom: 1px solid var(--border);">
+                     <button id="btn-toggle-html" class="hud-btn">Toggle HTML Source View</button>
+                 </div>
+                 <div style="display: flex; flex: 1; min-height: 0; overflow: hidden;">
+                     <div class="code-editor" id="html-source-pane" style="border-right: 1px solid var(--border); max-width: 400px; resize: horizontal; min-height: 0;">
+                         <div class="line-numbers" id="html-lines"></div>
+                         <textarea id="html-raw-textarea" readonly spellcheck="false" style="background: var(--bg-panel);">Loading HTML...</textarea>
+                     </div>
+                     <div class="sandbox-wrapper">
+                        <div id="html-sandbox-content">Loading Renderer...</div>
+                     </div>
+                 </div>
+              </div>
           </div>
 
-          <div id="view-source-scss" class="view-module" style="height: 100%; min-height: 0;">
-              <div style="padding: 8px 16px; background: #0f172a; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center; justify-content: space-between;">
+          <div class="source-panel active" id="source-panel-container">
+              <header class="panel-header" style="background: #0f172a; padding: 12px 16px;">
+                  <div class="header-top-row">
+                    <h2 class="title-neon" style="color: var(--accent-green);">SOURCE SCSS</h2>
+                    <button class="hud-btn" id="btn-toggle-source" style="padding: 2px 6px;">✕</button>
+                  </div>
+              </header>
+              <div style="padding: 8px 16px; background: #1e293b; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+                      <select id="source-file-select" class="editable-node font-mono" style="flex: 1; padding: 4px 6px;"></select>
+                  </div>
                   <div style="display: flex; gap: 8px; align-items: center;">
-                      <span style="color: var(--text-muted); font-size: 0.75rem; font-weight: bold;">FILE:</span>
-                      <select id="source-file-select" class="editable-node font-mono" style="width: 200px; padding: 2px 6px;"></select>
-
-                      <span style="color: var(--text-muted); font-size: 0.75rem; font-weight: bold; margin-left: 8px;">LINE:</span>
+                      <span style="color: var(--text-muted); font-size: 0.7rem; font-weight: bold;">L:</span>
                       <input type="number" id="source-goto-input" class="editable-node font-mono" style="width: 60px; padding: 2px 6px;" placeholder="#" min="1" />
                       <button id="btn-source-goto" class="hud-btn" style="padding: 2px 10px;">GO</button>
                   </div>
-
-                  <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-editor); border: 1px solid var(--border); border-radius: 4px; padding-right: 8px;">
-                      <input type="text" id="source-search" class="font-mono" style="width: 180px; padding: 4px 8px; font-size: 0.7rem; border: none; background: transparent; color: #fff; outline:none;" placeholder="Search file 🔍" />
+                  <div style="display: flex; align-items: center; gap: 8px; background: #0f172a; border: 1px solid var(--border); border-radius: 4px; padding-right: 8px;">
+                      <input type="text" id="source-search" class="font-mono" style="width: 100%; padding: 4px 8px; font-size: 0.7rem; border: none; background: transparent; color: #fff; outline:none;" placeholder="Search file 🔍" />
                       <span id="source-search-counter" style="color: var(--text-muted); font-size: 0.65rem; min-width: 30px; text-align: center;">0/0</span>
                   </div>
               </div>
               <div class="code-editor" style="border:none;">
                   <div class="line-numbers" id="source-lines"></div>
                   <textarea id="source-css-textarea" readonly spellcheck="false">Loading Source Files...</textarea>
+                  <div id="source-editor-overlay" class="editor-overlay"></div>
               </div>
           </div>
 
-          <div id="view-contrast" class="view-module" style="padding: 24px; overflow-y: auto;">
-            <h3 style="color: var(--accent-orange); margin-bottom: 16px;">WCAG Contrast Scoring (Colors)</h3>
-            <div id="contrast-matrix-container" class="matrix-grid"></div>
-          </div>
-
-          <div id="view-sandbox" class="view-module" style="height: 100%; min-height: 0;">
-             <div style="padding: 8px 16px; background: #0f172a; border-bottom: 1px solid var(--border);">
-                 <button id="btn-toggle-html" class="hud-btn">Toggle HTML Source View</button>
-             </div>
-             <div style="display: flex; flex: 1; min-height: 0; overflow: hidden;">
-                 <div class="code-editor" id="html-source-pane" style="border-right: 1px solid var(--border); max-width: 400px; resize: horizontal; min-height: 0;">
-                     <div class="line-numbers" id="html-lines"></div>
-                     <textarea id="html-raw-textarea" readonly spellcheck="false" style="background: var(--bg-panel);">Loading HTML...</textarea>
-                 </div>
-                 <div class="sandbox-wrapper">
-                    <div id="html-sandbox-content">Loading Renderer...</div>
-                 </div>
-             </div>
-          </div>
         </div>
       </section>
     </main>
@@ -266,13 +289,31 @@
             if (e.key === '1' && tabs[0]) { e.preventDefault(); tabs[0].click(); }
             if (e.key === '2' && tabs[1]) { e.preventDefault(); tabs[1].click(); }
             if (e.key === '3' && tabs[2]) { e.preventDefault(); tabs[2].click(); }
-            if (e.key === '4' && tabs[3]) { e.preventDefault(); tabs[3].click(); }
+            if (e.key === 's' || e.key === 'S') {
+                e.preventDefault();
+                const sp = document.getElementById('source-panel-container');
+                sp.classList.toggle('active');
+            }
         }
     });
 
+    document.getElementById('btn-toggle-source').addEventListener('click', () => {
+        document.getElementById('source-panel-container').classList.remove('active');
+    });
+
     document.addEventListener('click', (e) => {
+        // Handle Tooltip closure
         if (!e.target.closest('.tooltip-container')) {
             document.querySelectorAll('.tooltip-text.active').forEach(el => el.classList.remove('active'));
+        }
+
+        // --- UPDATED: Active row focus state (Parent & Child) ---
+        const clickedRow = e.target.closest('.parent-row, .child-override-row');
+        if (clickedRow) {
+            // Remove active state from ANY currently active row
+            document.querySelectorAll('.active-row').forEach(row => row.classList.remove('active-row'));
+            // Add to the newly clicked row
+            clickedRow.classList.add('active-row');
         }
     });
 
@@ -284,28 +325,65 @@
         };
     }
 
-    function syncLines(textareaId, linesId) {
+    function generateOverlayContent(sourceText, searchTerm = null, highlightLine = null) {
+        let lines = sourceText.split('\n');
+
+        if (highlightLine && highlightLine > 0 && highlightLine <= lines.length) {
+            let oLines = new Array(lines.length).fill('');
+            oLines[highlightLine - 1] = `<span class="highlight-line"> </span>`;
+            return oLines.join('\n');
+        }
+
+        if (searchTerm) {
+            let oLines = new Array(lines.length).fill('');
+            let termLength = searchTerm.length;
+
+            for(let i = 0; i < lines.length; i++) {
+                let localLineLower = lines[i].toLowerCase();
+                let matchInLine = localLineLower.indexOf(searchTerm);
+
+                if (matchInLine !== -1) {
+                    let pad = " ".repeat(matchInLine);
+                    let highlight = `<span class="highlight-text">${" ".repeat(termLength)}</span>`;
+                    oLines[i] = pad + highlight;
+                }
+            }
+            return oLines.join('\n');
+        }
+
+        return "";
+    }
+
+    function syncLines(textareaId, linesId, overlayId = null) {
         const ta = document.getElementById(textareaId);
         const ln = document.getElementById(linesId);
+        const ov = overlayId ? document.getElementById(overlayId) : null;
         if(!ta || !ln) return () => {};
+
         const update = () => {
             const lines = ta.value.split('\n').length;
             ln.innerHTML = Array(lines).fill(0).map((_, i) => i + 1).join('<br>');
+            if (ov) ov.innerHTML = "";
         };
+
         ta.addEventListener('input', update);
-        ta.addEventListener('scroll', () => { ln.scrollTop = ta.scrollTop; });
+        ta.addEventListener('scroll', () => {
+            ln.scrollTop = ta.scrollTop;
+            if(ov) { ov.scrollTop = ta.scrollTop; ov.scrollLeft = ta.scrollLeft; }
+        });
         update();
         return update;
     }
 
-    const updateGlobalLines = syncLines('global-scss-input', 'global-lines');
+    const updateGlobalLines = syncLines('global-scss-input', 'global-lines', 'global-editor-overlay');
     const updateInputLines = syncLines('scss-input', 'input-lines');
     const updateHtmlLines = syncLines('html-raw-textarea', 'html-lines');
-    const updateSourceLines = syncLines('source-css-textarea', 'source-lines');
+    const updateSourceLines = syncLines('source-css-textarea', 'source-lines', 'source-editor-overlay');
 
     const gotoInput = document.getElementById('source-goto-input');
     const gotoBtn = document.getElementById('btn-source-goto');
     const sourceTa = document.getElementById('source-css-textarea');
+    const sourceOverlay = document.getElementById('source-editor-overlay');
 
     function jumpToLine() {
         const line = parseInt(gotoInput.value);
@@ -319,13 +397,16 @@
         sourceTa.focus();
         sourceTa.setSelectionRange(charIdx, charIdx + lines[line-1].length);
         sourceTa.scrollTop = ((line - 1) * 19.2) - (sourceTa.clientHeight / 2);
+
+        sourceOverlay.innerHTML = generateOverlayContent(sourceTa.value, null, line);
     }
 
     gotoBtn.addEventListener('click', jumpToLine);
     gotoInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') jumpToLine(); });
 
     window.jumpToSource = function(filename, lineNumber) {
-        document.getElementById('tab-source-btn').click();
+        document.getElementById('source-panel-container').classList.add('active');
+
         const select = document.getElementById('source-file-select');
         select.value = filename;
         select.dispatchEvent(new Event('change'));
@@ -343,10 +424,11 @@
         pane.style.display = pane.style.display === 'none' ? 'flex' : 'none';
     });
 
-    function initSearchEngine(inputId, counterId, textareaId, wrapperId = null) {
+    function initSearchEngine(inputId, counterId, textareaId, wrapperId = null, overlayId = null) {
         const searchInput = document.getElementById(inputId);
         const counter = document.getElementById(counterId);
         const ta = document.getElementById(textareaId);
+        const ov = overlayId ? document.getElementById(overlayId) : null;
         let matches = [];
         let matchIdx = -1;
 
@@ -355,6 +437,9 @@
             const text = ta.value.toLowerCase();
             matches = [];
             matchIdx = -1;
+
+            if (ov) ov.innerHTML = "";
+
             if (term) {
                 let idx = text.indexOf(term);
                 while (idx !== -1) {
@@ -385,6 +470,10 @@
                     document.getElementById(wrapperId).classList.add('expanded');
                 }
 
+                if (ov) {
+                    ov.innerHTML = generateOverlayContent(ta.value, searchInput.value.toLowerCase(), null);
+                }
+
                 ta.focus();
                 ta.setSelectionRange(idx, idx + termLength);
                 ta.scrollTop = (lineNum * 19.2) - (ta.clientHeight / 2);
@@ -394,12 +483,62 @@
         return function reset() { searchInput.value = ''; counter.innerText = '0/0'; matches = []; };
     }
 
-    initSearchEngine('global-search', 'search-counter', 'global-scss-input', 'global-top-bar');
-    const resetSourceSearch = initSearchEngine('source-search', 'source-search-counter', 'source-css-textarea');
+    initSearchEngine('global-search', 'search-counter', 'global-scss-input', 'global-top-bar', 'global-editor-overlay');
+    const resetSourceSearch = initSearchEngine('source-search', 'source-search-counter', 'source-css-textarea', null, 'source-editor-overlay');
 
     document.getElementById('global-header').addEventListener('click', (e) => {
         if(e.target.id !== 'global-search') document.getElementById('global-top-bar').classList.toggle('expanded');
     });
+
+    const applyFilters = debounce(() => {
+        const term = document.getElementById('override-search').value.toLowerCase();
+        const selectedCat = document.getElementById('override-category').value;
+
+        document.querySelectorAll('.parent-row').forEach(row => {
+            const rowCat = row.getAttribute('data-category') || '';
+            const childRows = document.querySelectorAll(`.child-of-${row.dataset.extractedId}`);
+
+            const pVal = (row.getAttribute('data-value') || '').toLowerCase();
+            const pExt = (row.getAttribute('data-extracted') || '').toLowerCase();
+            const pSelect = (row.querySelector('.bulk-select').value || '').toLowerCase();
+            const pInput = (row.querySelector('.bulk-custom').value || '').toLowerCase();
+            const pSearchText = `${pVal} ${pExt} ${pSelect} ${pInput}`;
+
+            const catMatch = (selectedCat === '') || (rowCat === selectedCat);
+            const parentMatch = pSearchText.includes(term);
+
+            let anyChildMatch = false;
+
+            childRows.forEach(cRow => {
+                const cFile = (cRow.getAttribute('data-file') || '').toLowerCase();
+                const cLine = (cRow.getAttribute('data-line') || '').toLowerCase();
+                const cSelect = (cRow.querySelector('.child-select').value || '').toLowerCase();
+                const cInput = (cRow.querySelector('.child-input').value || '').toLowerCase();
+                const cSearchText = `${cFile} ${cLine} ${cSelect} ${cInput}`;
+
+                if (term !== '' && cSearchText.includes(term)) {
+                    anyChildMatch = true;
+                    cRow.style.display = 'table-row';
+                } else {
+                    cRow.style.display = 'none';
+                }
+            });
+
+            if (term === '') {
+                childRows.forEach(c => c.style.display = 'none');
+            }
+
+            if (catMatch && (term === '' || parentMatch || anyChildMatch)) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }, 350);
+
+    document.getElementById('override-search').addEventListener('input', applyFilters);
+    document.getElementById('override-category').addEventListener('change', applyFilters);
+
 
     class TokenManager {
       constructor() {
@@ -484,9 +623,10 @@
           while ((match = regex.exec(globalScss)) !== null) {
               let name = match[1].trim();
               let value = match[2].split('//')[0].trim();
-              let cat = this.categorizeToken(name, value).toLowerCase();
-              if (!BRAND_GUIDE[cat]) BRAND_GUIDE[cat] = {};
-              BRAND_GUIDE[cat][`$${name}`] = value;
+              let cat = this.categorizeToken(name, value);
+              let cLower = cat.toLowerCase();
+              if (!BRAND_GUIDE[cLower]) BRAND_GUIDE[cLower] = {};
+              BRAND_GUIDE[cLower][`$${name}`] = value;
           }
       }
 
@@ -517,7 +657,7 @@
         if (n.includes('border') || n.includes('radii') || n.includes('radius')) return 'Borders';
         if (n.includes('shadow')) return 'Shadows';
         if (n.includes('size') || n.includes('width') || n.includes('height')) return 'Sizing';
-        return 'Uncategorized';
+        return 'Misc';
       }
 
       hexToRgb(val) {
@@ -646,19 +786,23 @@
             return;
         }
 
+        let universalBrandOptions = '<option value="">-- Select or Map to Global --</option>';
+        if (BRAND_GUIDE) {
+            for (const [catName, tokensObj] of Object.entries(BRAND_GUIDE)) {
+                if (Object.keys(tokensObj).length > 0) {
+                    universalBrandOptions += `<optgroup label="--- ${catName.toUpperCase()} ---">`;
+                    for (const [bName, bVal] of Object.entries(tokensObj)) {
+                        universalBrandOptions += `<option value="${bName}">${bName} (${bVal})</option>`;
+                    }
+                    universalBrandOptions += `</optgroup>`;
+                }
+            }
+        }
+
         let htmlBuffer = '';
 
         unbranded.forEach(t => {
             const tId = t.name.replace(/[^a-zA-Z0-9]/g, '');
-
-            let brandOptions = '<option value="">-- Select or Map to Global --</option>';
-            const bgCat = (t.category === 'Colors') ? 'colors' : (t.category === 'Typography') ? 'typography' : (t.category === 'Spacing') ? 'spacing' : null;
-
-            if (bgCat && BRAND_GUIDE[bgCat]) {
-                Object.entries(BRAND_GUIDE[bgCat]).forEach(([bName, bVal]) => {
-                    brandOptions += `<option value="${bName}">${bName} (${bVal})</option>`;
-                });
-            }
 
             let suggestionHtml = '';
             let rawVisual = '', suggVisual = '';
@@ -674,10 +818,10 @@
                     <div class="res-swatch" style="background:${suggestion.value}; width:40px; height:40px; border-radius:6px; border:1px solid #475569;"></div>
                     <span class="font-mono" style="font-size:0.75rem; color:var(--accent-green); margin-top:6px;">${suggestion.value}</span>`;
                 } else if (t.category === 'Spacing' || t.category === 'Sizing') {
-                    rawVisual = `<div style="width:${t.value}; max-width:60px; height:12px; background:var(--text-muted); border-radius:2px;"></div><span class="font-mono" style="font-size:0.75rem; margin-top:6px;">${t.value}</span>`;
+                    rawVisual = `<div style="width:${t.value}; max-width:60px; height:12px; background:var(--text-muted); border-radius:2px;"></div><span class="font-mono" style="font-size:0.75rem; margin-top:6px; color:var(--text-main);">${t.value}</span>`;
                     suggVisual = `<div style="width:${suggestion.value}; max-width:60px; height:12px; background:var(--accent-green); border-radius:2px;"></div><span class="font-mono" style="font-size:0.75rem; color:var(--accent-green); margin-top:6px;">${suggestion.value}</span>`;
                 } else {
-                    rawVisual = `<div class="font-mono" style="font-size:0.75rem; margin-top:6px;">${t.value}</div>`;
+                    rawVisual = `<div class="font-mono" style="font-size:0.75rem; margin-top:6px; color:var(--text-main);">${t.value}</div>`;
                     suggVisual = `<div class="font-mono" style="font-size:0.75rem; color:var(--accent-green); margin-top:6px;">${suggestion.value}</div>`;
                 }
 
@@ -698,17 +842,20 @@
                     ↳ Map to: ${suggestion.name} (${suggestion.score.toFixed(1)}%)
                 </div>`;
             } else {
-                suggestionHtml = `<div class="font-mono" style="color:var(--text-muted); font-size:0.75rem;">${t.value}</div>`;
+                suggestionHtml = `<div class="font-mono" style="color:var(--text-main); font-size:0.75rem; padding:10px;">${t.value}</div>`;
             }
 
             let lineageIcon = this.getLineageIcon(t.value);
             const lineageArray = Array.isArray(LINEAGE_DATA[t.value]) ? LINEAGE_DATA[t.value] : (LINEAGE_DATA[t.value] ? LINEAGE_DATA[t.value].split(' | ') : []);
 
             htmlBuffer += `
-                <tr class="parent-row" data-extracted="${t.name}" data-value="${t.value.replace(/"/g, "&quot;")}" data-extracted-id="${tId}">
+                <tr class="parent-row" data-extracted="${t.name}" data-value="${t.value.replace(/"/g, "&quot;")}" data-extracted-id="${tId}" data-category="${t.category}">
                     <td style="font-weight:bold; color:var(--text-main);">
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <span class="font-mono" style="font-size:1rem;">${t.value}</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span class="font-mono" style="font-size:1rem;">${t.value}</span>
+                                <span style="font-size:0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.3); text-transform: uppercase;">${t.category}</span>
+                            </div>
                             ${lineageIcon}
                             <button class="hud-btn" style="width:fit-content; font-size:0.65rem; margin-top:8px;" onclick="
                                 const targetClass = 'child-of-${tId}';
@@ -726,8 +873,8 @@
                     <td>
                         <div style="display:flex; flex-direction: column; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border);">
                             <span style="font-size:0.6rem; color:var(--text-muted); text-transform:uppercase;">Bulk Assignment:</span>
-                            <select class="editable-node font-mono bulk-select" onchange="const tr = this.closest('tr'); tr.querySelector('.bulk-custom').value = '';">${brandOptions}</select>
-                            <input type="text" class="editable-node font-mono bulk-custom" placeholder="Or custom bulk token (e.g. $card-bg)" />
+                            <select class="editable-node font-mono bulk-select" onchange="window.handleMappingChange(this);">${universalBrandOptions}</select>
+                            <input type="text" class="editable-node font-mono bulk-custom" placeholder="Or custom bulk token (e.g. $card-bg)" oninput="window.handleMappingChange(this);" />
                         </div>
                     </td>
                 </tr>
@@ -756,8 +903,8 @@
                     </td>
                     <td>
                         <div style="display:flex; gap: 8px;">
-                            <select class="editable-node font-mono child-select" onchange="this.nextElementSibling.value='';">${brandOptions}</select>
-                            <input type="text" class="editable-node font-mono child-input" placeholder="Override line..." />
+                            <select class="editable-node font-mono child-select" onchange="window.handleChildMappingChange(this);">${universalBrandOptions}</select>
+                            <input type="text" class="editable-node font-mono child-input" placeholder="Override line..." oninput="window.handleChildMappingChange(this);" />
                         </div>
                     </td>
                 </tr>`;
@@ -872,8 +1019,35 @@
         if (tr) {
             tr.querySelector('input.bulk-custom').value = value;
             tr.querySelector('select.bulk-select').value = '';
+            tr.classList.add('has-mapping');
         }
     };
+
+    window.handleMappingChange = function(el) {
+        const tr = el.closest('tr');
+        const sel = tr.querySelector('.bulk-select').value;
+        const cust = tr.querySelector('.bulk-custom').value;
+        if(sel || cust.trim() !== '') {
+            tr.classList.add('has-mapping');
+            if(el.classList.contains('bulk-custom') && cust.trim() !== '') tr.querySelector('.bulk-select').value = '';
+            if(el.classList.contains('bulk-select') && sel !== '') tr.querySelector('.bulk-custom').value = '';
+        } else {
+            tr.classList.remove('has-mapping');
+        }
+    }
+
+    window.handleChildMappingChange = function(el) {
+        const tr = el.closest('tr');
+        const sel = tr.querySelector('.child-select').value;
+        const cust = tr.querySelector('.child-input').value;
+        if(sel || cust.trim() !== '') {
+            tr.classList.add('has-mapping');
+            if(el.classList.contains('child-input') && cust.trim() !== '') tr.querySelector('.child-select').value = '';
+            if(el.classList.contains('child-select') && sel !== '') tr.querySelector('.child-input').value = '';
+        } else {
+            tr.classList.remove('has-mapping');
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', () => new TokenManager());
     </script>

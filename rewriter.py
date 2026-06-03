@@ -1,10 +1,43 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import json
 import shutil
+import time
+import threading
 import config
+import re
 
-# Accept the global_var_file argument passed by main.py
+# --- PROGRESS INDICATOR UTILITY ---
+class Spinner:
+    def __init__(self, message="Processing..."):
+        self.spinner_chars = ['|', '/', '-', '\\']
+        self.delay = 0.1
+        self.message = message
+        self.running = False
+        self.thread = None
+
+    def spin(self):
+        while self.running:
+            for char in self.spinner_chars:
+                if not self.running: break
+                sys.stdout.write(f'\r[ {char} ] {self.message}')
+                sys.stdout.flush()
+                time.sleep(self.delay)
+        sys.stdout.write('\r' + ' ' * (len(self.message) + 6) + '\r')
+        sys.stdout.flush()
+
+    def start(self):
+        self.running = True
+        self.thread = threading.Thread(target=self.spin)
+        self.thread.start()
+
+    def stop(self):
+        self.running = False
+        if self.thread:
+            self.thread.join()
+# ---------------------------------
+
 def apply_resolution_map(global_var_file=None, *args, **kwargs):
     print("\n[REWRITER] Initializing AST Line-Level codebase rewrite...")
 
@@ -23,13 +56,9 @@ def apply_resolution_map(global_var_file=None, *args, **kwargs):
         print("[ERROR] Resolution map is empty or not in the required AST Array format.")
         return False
 
-    print(f"[REWRITER] Processing {len(mapping)} specific AST line mutations...")
-
-    # 1. Gather all variables to dynamically append to global vars
     new_vars_to_append = {}
-
-    # Group mutations by file to optimize I/O operations
     file_mutations = {}
+
     for mut in mapping:
         f_name = mut.get('file')
         mapped_var = mut.get('mapped')
@@ -44,7 +73,9 @@ def apply_resolution_map(global_var_file=None, *args, **kwargs):
             file_mutations[f_name] = []
         file_mutations[f_name].append(mut)
 
-    # --- GLOBAL VARIABLE AUTO-DECLARATION ---
+    if not global_var_file and len(args) > 0:
+        global_var_file = args[0]
+
     if global_var_file:
         global_path = os.path.join(config.SCSS_DIR, global_var_file)
         if os.path.exists(global_path):
@@ -54,32 +85,35 @@ def apply_resolution_map(global_var_file=None, *args, **kwargs):
             appended_count = 0
             with open(global_path, 'a', encoding='utf-8') as f:
                 for var_name, var_value in new_vars_to_append.items():
-                    # If the user mapped to a custom token that isn't declared yet, append it.
                     if f"{var_name}:" not in global_content.replace(' ', ''):
                         if appended_count == 0:
                             f.write("\n\n// --- Auto-Appended by SCSS Copilot ---\n")
                         f.write(f"{var_name}: {var_value};\n")
                         appended_count += 1
+                        global_content += f"\n{var_name}: {var_value};\n"
 
             if appended_count > 0:
                 print(f"[REWRITER] Auto-Appended {appended_count} new variables to {global_var_file}")
     else:
         print("[WARNING] No global variable file detected to auto-append new tokens.")
-    # ----------------------------------------
+
+    # Start Progress Indicator
+    spinner = Spinner(f"Mutating {len(mapping)} AST tokens across {len(file_mutations)} components...")
+    spinner.start()
+
+    boundary_chars = r'[a-zA-Z0-9\.\-%_#]'
+    total_mutations_applied = 0
 
     for filename, mutations in file_mutations.items():
         src_path = os.path.join(config.SCSS_DIR, filename)
         out_path = os.path.join(config.APPLIED_DIR, filename)
 
         if not os.path.exists(src_path):
-            print(f"[WARNING] Source file missing: {filename}")
             continue
 
         with open(src_path, 'r', encoding='utf-8') as src:
             lines = src.readlines()
 
-        # Apply mutations line by line
-        mutations_applied = 0
         for mut in mutations:
             line_num = mut.get('line')
             old_raw = mut.get('raw')
@@ -87,24 +121,24 @@ def apply_resolution_map(global_var_file=None, *args, **kwargs):
 
             if line_num and 1 <= line_num <= len(lines):
                 idx = line_num - 1
-                if old_raw in lines[idx]:
-                    lines[idx] = lines[idx].replace(old_raw, new_token)
-                    mutations_applied += 1
+                pattern = re.compile(fr"(?<!{boundary_chars}){re.escape(old_raw)}(?!{boundary_chars})", re.IGNORECASE)
+                if pattern.search(lines[idx]):
+                    lines[idx] = pattern.sub(new_token, lines[idx])
+                    total_mutations_applied += 1
 
-        # Ensure output staging directory exists
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
         with open(out_path, 'w', encoding='utf-8') as out:
             out.writelines(lines)
 
-        print(f" -> Staged {filename}: {mutations_applied} mutations applied.")
-
-        # Closed-Loop Promotion: Safely back-sync from staging directly to src_scss
         try:
             shutil.copy2(out_path, src_path)
-            print(f"    [SYNC] Promoted staged changes back to source folder: {src_path}")
         except Exception as e:
+            spinner.stop()
             print(f"    [ERROR] Sync promotion failed for {filename}: {e}")
+            spinner.start()
 
-    print(f"\n[SUCCESS] AST Rewrites successfully applied and promoted to production source!")
+    # Stop Progress Indicator
+    spinner.stop()
+    print(f"[SUCCESS] AST Rewrite Complete: {total_mutations_applied} mutations successfully applied and promoted!")
     return True

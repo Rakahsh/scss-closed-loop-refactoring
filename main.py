@@ -3,6 +3,8 @@ import os
 import sys
 import csv
 import webbrowser
+import time
+import threading
 from datetime import datetime
 import config
 import diagnostics
@@ -13,6 +15,36 @@ import visualizer_api
 import html_parser
 import rewriter
 import server
+
+# --- PROGRESS INDICATOR UTILITY ---
+class Spinner:
+    def __init__(self, message="Processing..."):
+        self.spinner_chars = ['|', '/', '-', '\\']
+        self.delay = 0.1
+        self.message = message
+        self.running = False
+        self.thread = None
+
+    def spin(self):
+        while self.running:
+            for char in self.spinner_chars:
+                if not self.running: break
+                sys.stdout.write(f'\r[ {char} ] {self.message}')
+                sys.stdout.flush()
+                time.sleep(self.delay)
+        sys.stdout.write('\r' + ' ' * (len(self.message) + 6) + '\r')
+        sys.stdout.flush()
+
+    def start(self):
+        self.running = True
+        self.thread = threading.Thread(target=self.spin)
+        self.thread.start()
+
+    def stop(self):
+        self.running = False
+        if self.thread:
+            self.thread.join()
+# ---------------------------------
 
 def generate_report_file(data, current_iteration, stamp):
     filepath = os.path.join(config.REPORT_DIR, f"copilot_drift_v{current_iteration}_{stamp}.csv")
@@ -34,7 +66,7 @@ def get_global_file_name():
 def main():
     diagnostics.start_session()
     print("======================================================================")
-    print("SCSS Dynamic Copilot Engine - v8.16.2 (Closed-Loop Edition)")
+    print("SCSS Dynamic Copilot Engine - v8.22.0 (Closed-Loop Edition)")
     print("======================================================================")
 
     import preflight
@@ -69,19 +101,25 @@ def main():
 
         session_aging = round((datetime.now() - session_start).total_seconds(), 2)
 
+        # --- NEW: Visual Feedback during heavy processing ---
+        spinner = Spinner("Analyzing CSS ASTs & Extracting Lineage Data (This takes a moment)...")
+        spinner.start()
+
         results = analyzer.compute_discrepancies(
             os.path.join(config.SOURCE_DIR, compiled_targets[0]),
             os.path.join(config.SOURCE_DIR, compiled_targets[1]),
             session_aging
         )
 
-        # --- THE FIX: Capture the generated _variables_generated.scss file path ---
         var_file_path = refactorer.execute_automated_extraction(results)
+
+        spinner.stop()
+        diagnostics.log_info(f"AST Analysis & Lineage Extraction Complete.")
+        # ----------------------------------------------------
 
         html_snippets = html_parser.get_html_snippets()
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        # Read the generated extracted tokens for the UI feed
         visualizer_scss_feed = ""
         if var_file_path and os.path.exists(var_file_path):
             with open(var_file_path, 'r', encoding='utf-8') as vf:
@@ -97,7 +135,6 @@ def main():
             with open(os.path.join(config.SOURCE_DIR, cf), 'r', encoding='utf-8') as f:
                 compiled_css_inject += f.read() + "\n"
 
-        # Send data securely to API
         visualizer_api.update_api_payload(visualizer_scss_feed, html_snippets, compiled_css_inject, global_scss_content)
         csv_report = generate_report_file(results, iteration, stamp)
 

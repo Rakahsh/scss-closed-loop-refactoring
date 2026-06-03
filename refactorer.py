@@ -8,8 +8,11 @@ import diagnostics
 def get_value_variations(val):
     val = str(val).strip().lower()
     variations = {val}
-    # Add spacing-stripped variations for functions like rgba(255, 255, 255)
-    variations.add(val.replace(" ", ""))
+    no_space = val.replace(" ", "")
+    variations.add(no_space)
+    if 'rgba' in no_space:
+        variations.add(no_space.replace("0.", "."))
+        variations.add(val.replace("0.", "."))
 
     if val.startswith('#'):
         if len(val) == 7 and val[1] == val[2] and val[3] == val[4] and val[5] == val[6]:
@@ -23,38 +26,40 @@ def get_value_variations(val):
     return list(variations)
 
 def find_all_raw_value_lines(scss_file_path, compiled_value):
-    # Nesting-Agnostic Scanner: Ignores CSS selector boundaries.
-    # Simply finds every line where the raw value was explicitly typed.
     variations = get_value_variations(compiled_value)
     hits = []
+    has_any_match = False
+
+    # Boundary constraints: Prevent matching partial values (e.g. 1.2 matching 1.25)
+    boundary_chars = r'[a-zA-Z0-9\.\-%_#]'
+
     try:
         with open(scss_file_path, 'r', encoding='utf-8') as f:
             lines = f.readlines()
 
         for idx, line in enumerate(lines):
             line_lower = line.lower()
-            if line_lower.strip().startswith('//'):
+            if line_lower.strip().startswith('//'): continue
+
+            if line_lower.strip().startswith('$') and ':' in line_lower and '{' not in line_lower:
                 continue
 
             for v in variations:
-                if v in line_lower:
-                    # Prevent False Positives (e.g. matching #fff inside #ffffff)
-                    if v.startswith('#'):
-                        v_idx = line_lower.find(v)
-                        end_idx = v_idx + len(v)
-                        if end_idx < len(line_lower) and line_lower[end_idx] in '0123456789abcdef':
-                            continue
-
+                # High-Performance Regex Matching Strategy
+                pattern = re.compile(fr"(?<!{boundary_chars}){re.escape(v)}(?!{boundary_chars})")
+                if pattern.search(line_lower):
                     hits.append(idx + 1)
-                    break # Move to next line after finding a hit
-        return hits
+                    has_any_match = True
+                    break
+
+        return hits, has_any_match
     except Exception as e:
         diagnostics.log_error(f"AST Verification Failed on {scss_file_path}: {e}")
-        return []
+        return [], False
 
 def is_junk_value(val):
     val_clean = val.strip().lower()
-    if val_clean in config.JUNK_VALUES: return True
+    if val_clean in getattr(config, 'JUNK_VALUES', []): return True
     if val_clean.isalpha() and val_clean not in ['red', 'blue', 'green', 'black', 'white', 'gray']: return True
     return False
 
@@ -78,7 +83,6 @@ def execute_automated_extraction(metrics_list):
 
     for row in metrics_list:
         context_dict = ast.literal_eval(row["Context"])
-        source_css = row["Source"]
         css_selector = row["Selector"]
 
         if row["Status"] == "Identical Match (Ready)":
@@ -91,21 +95,21 @@ def execute_automated_extraction(metrics_list):
                     continue
 
                 exact_origins = []
+                is_hardcoded = False
                 for s_file in scss_files:
                     full_path = os.path.join(config.SCSS_DIR, s_file)
-                    hits = find_all_raw_value_lines(full_path, val)
-                    for h in hits:
-                        exact_origins.append(f"{s_file}:{h}")
+                    hits, file_has_match = find_all_raw_value_lines(full_path, val)
+                    if file_has_match: is_hardcoded = True
+                    for h in hits: exact_origins.append(f"{s_file}:{h}")
 
-                # Skip if dynamically generated (no hardcoded string found)
-                if not exact_origins:
+                if not is_hardcoded:
                     continue
 
                 category = classify_property_intent(prop, val)
 
-                if val not in [v.split(';')[0] for v in taxonomy[category].values()]:
-                    if category == "colors" and config.CRAWL_SETTINGS["auto_extract_hex"]:
-                        hex_matches = re.findall(r'#[0-9a-fA-F]{3,8}', str(val))
+                if category == "colors":
+                    hex_matches = re.findall(r'#[0-9a-fA-F]{3,8}', str(val))
+                    if hex_matches and config.CRAWL_SETTINGS["auto_extract_hex"]:
                         for h_val in hex_matches:
                             if h_val not in [v.split(';')[0] for v in taxonomy["colors"].values()]:
                                 taxonomy["colors"][f"$color-extracted-{counters['colors']}"] = h_val
@@ -113,6 +117,13 @@ def execute_automated_extraction(metrics_list):
                                 lineage_hooks[h_val].extend(exact_origins)
                                 counters["colors"] += 1
                     else:
+                        if val not in [v.split(';')[0] for v in taxonomy["colors"].values()]:
+                            taxonomy["colors"][f"$color-extracted-{counters['colors']}"] = val
+                            if val not in lineage_hooks: lineage_hooks[val] = []
+                            lineage_hooks[val].extend(exact_origins)
+                            counters["colors"] += 1
+                else:
+                    if val not in [v.split(';')[0] for v in taxonomy[category].values()]:
                         taxonomy[category][f"${category}-extracted-{counters[category]}"] = val
                         if val not in lineage_hooks: lineage_hooks[val] = []
                         lineage_hooks[val].extend(exact_origins)
