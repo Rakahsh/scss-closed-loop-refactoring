@@ -7,6 +7,7 @@ import time
 import threading
 import config
 import re
+import refactorer # INJECTED: Connects to the variations engine
 
 # --- PROGRESS INDICATOR UTILITY ---
 class Spinner:
@@ -121,10 +122,26 @@ def apply_resolution_map(global_var_file=None, *args, **kwargs):
 
             if line_num and 1 <= line_num <= len(lines):
                 idx = line_num - 1
-                pattern = re.compile(fr"(?<!{boundary_chars}){re.escape(old_raw)}(?!{boundary_chars})", re.IGNORECASE)
-                if pattern.search(lines[idx]):
-                    lines[idx] = pattern.sub(new_token, lines[idx])
-                    total_mutations_applied += 1
+                replaced = False
+
+                # BUG FIX: Pipe the token through the variations engine to catch shorthand matches
+                variations = refactorer.get_value_variations(old_raw)
+                variations.sort(key=len, reverse=True) # Target longest exact variations first
+
+                for v in variations:
+                    pattern = re.compile(fr"(?<!{boundary_chars}){re.escape(v)}(?!{boundary_chars})", re.IGNORECASE)
+                    if pattern.search(lines[idx]):
+                        lines[idx] = pattern.sub(new_token, lines[idx])
+                        total_mutations_applied += 1
+                        replaced = True
+                        break # Halt once mutation is applied
+
+                if not replaced:
+                    spinner.stop()
+                    print(f"\n    [WARNING] Missed mutation on {filename} Line {line_num}.")
+                    print(f"    - Target: '{old_raw}' | Expected To Map To: '{new_token}'")
+                    print(f"    - Content: {lines[idx].strip()}")
+                    spinner.start()
 
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
 

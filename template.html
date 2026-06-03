@@ -189,6 +189,7 @@
             <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+1]</span></button>
             <button class="tab-btn" data-target="view-contrast">2. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+2]</span></button>
             <button class="tab-btn" data-target="view-sandbox">3. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+3]</span></button>
+            <button class="tab-btn" data-target="view-tools">4. TOOLS <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+4]</span></button>
           </nav>
         </header>
 
@@ -247,6 +248,47 @@
                     <div id="html-sandbox-content">Loading Renderer...</div>
                  </div>
               </div>
+
+              <div id="view-tools" class="view-module" style="padding: 24px; overflow-y: auto; flex: 1;">
+                <h3 style="color: var(--accent-purple); margin-bottom: 16px;">SCSS Utility Tools</h3>
+
+                <div class="matrix-card" style="max-width: 500px;">
+                    <div class="matrix-text" style="color: var(--accent-blue); font-size: 0.95rem;">Flat Color Calculator</div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Calculate the solid Hex equivalent of a semi-transparent foreground layered over a solid background.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px;">
+                        <div>
+                            <label style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Foreground (Hex)</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="color" id="tool-fg-color" value="#000000" style="width: 32px; height: 28px; border: 1px solid var(--border); background: transparent; cursor: pointer; padding: 0;" />
+                                <input type="text" id="tool-fg-hex" class="editable-node font-mono" value="#000000" style="flex:1;" />
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Background (Hex)</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="color" id="tool-bg-color" value="#ffffff" style="width: 32px; height: 28px; border: 1px solid var(--border); background: transparent; cursor: pointer; padding: 0;" />
+                                <input type="text" id="tool-bg-hex" class="editable-node font-mono" value="#ffffff" style="flex:1;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px;">
+                        <label style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Alpha Opacity: <span id="tool-alpha-val" style="color: var(--accent-neon); font-weight: bold;">0.50</span></label>
+                        <input type="range" id="tool-alpha" min="0" max="1" step="0.01" value="0.5" style="width: 100%; cursor: pointer;" />
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 16px; background: var(--bg-darker); border: 1px dashed var(--border); border-radius: 6px; display: flex; align-items: center; gap: 16px;">
+                        <div id="tool-result-swatch" style="width: 50px; height: 50px; border-radius: 6px; background: #808080; border: 1px solid var(--border);"></div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: bold;">Calculated Flat Color</div>
+                            <div id="tool-result-hex" class="font-mono" style="font-size: 1.1rem; font-weight: bold; color: var(--text-main);">#808080</div>
+                            <div id="tool-result-rgb" class="font-mono" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">rgb(128, 128, 128)</div>
+                        </div>
+                        <button class="hud-btn success" onclick="navigator.clipboard.writeText(document.getElementById('tool-result-hex').innerText); alert('Copied to clipboard!')" style="padding: 6px 12px;">COPY</button>
+                    </div>
+                </div>
+              </div>
           </div>
 
           <div class="source-panel active" id="source-panel-container">
@@ -293,6 +335,8 @@
             if (e.key === '1' && tabs[0]) { e.preventDefault(); tabs[0].click(); }
             if (e.key === '2' && tabs[1]) { e.preventDefault(); tabs[1].click(); }
             if (e.key === '3' && tabs[2]) { e.preventDefault(); tabs[2].click(); }
+            // NEW HOOK
+            if (e.key === '4' && tabs[3]) { e.preventDefault(); tabs[3].click(); }
             if (e.key === 's' || e.key === 'S') {
                 e.preventDefault();
                 const sp = document.getElementById('source-panel-container');
@@ -996,7 +1040,70 @@
         } else tr.classList.remove('has-mapping');
     }
 
-    document.addEventListener('DOMContentLoaded', () => new TokenManager());
+    // --- FLAT COLOR CALCULATOR LOGIC ---
+    function initFlatColorCalculator() {
+        const fgColor = document.getElementById('tool-fg-color');
+        const fgHex = document.getElementById('tool-fg-hex');
+        const bgColor = document.getElementById('tool-bg-color');
+        const bgHex = document.getElementById('tool-bg-hex');
+        const alphaRange = document.getElementById('tool-alpha');
+        const alphaVal = document.getElementById('tool-alpha-val');
+        const resSwatch = document.getElementById('tool-result-swatch');
+        const resHex = document.getElementById('tool-result-hex');
+        const resRgb = document.getElementById('tool-result-rgb');
+
+        function hexToRgb(hex) {
+            let h = hex.replace('#', '').trim();
+            if(h.length === 3) h = h.split('').map(x => x + x).join('');
+            if(h.length !== 6) return [0,0,0];
+            const num = parseInt(h, 16);
+            return [num >> 16, (num >> 8) & 255, num & 255];
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1).toUpperCase();
+        }
+
+        function calculate() {
+            let alpha = parseFloat(alphaRange.value);
+            alphaVal.innerText = alpha.toFixed(2);
+
+            let fg = hexToRgb(fgHex.value);
+            let bg = hexToRgb(bgHex.value);
+
+            // The Exact Mathematical Formula: Flat = (Alpha * FG) + ((1 - Alpha) * BG)
+            let r = Math.round((alpha * fg[0]) + ((1 - alpha) * bg[0]));
+            let g = Math.round((alpha * fg[1]) + ((1 - alpha) * bg[1]));
+            let b = Math.round((alpha * fg[2]) + ((1 - alpha) * bg[2]));
+
+            let finalHex = rgbToHex(r, g, b);
+
+            resSwatch.style.backgroundColor = finalHex;
+            resHex.innerText = finalHex;
+            resRgb.innerText = `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Two-way bindings for color picker and hex text input
+        const bindInput = (colorEl, textEl) => {
+            colorEl.addEventListener('input', (e) => { textEl.value = e.target.value; calculate(); });
+            textEl.addEventListener('input', (e) => {
+                let val = e.target.value;
+                if(val.length === 7) { colorEl.value = val; calculate(); }
+                if(val.length === 4) { colorEl.value = "#" + val[1].repeat(2) + val[2].repeat(2) + val[3].repeat(2); calculate(); }
+            });
+        };
+
+        bindInput(fgColor, fgHex);
+        bindInput(bgColor, bgHex);
+        alphaRange.addEventListener('input', calculate);
+
+        calculate(); // Initial render
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new TokenManager();
+        initFlatColorCalculator(); // Initialize Tool
+    });
     </script>
 </body>
 </html>

@@ -1,281 +1,6 @@
 @import 'variables_generated';
 
 // Lineage: Ready for mapping
-.user-custom {
-  ;
-}
-
-// Lineage: Ready for mapping
-.advisor {
-  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%);
-  border-radius: 20px;
-  padding: 30px;
-  color: #FFF;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-// Lineage: Ready for mapping
-.user-custom--outcomes {
-  ;
-}
-
-// Lineage: Ready for mapping
-.user-custom--future-careers {
-  ;
-}
-
-// Lineage: Ready for mapping
-.course-hero__tagline {
-  margin: 0 0 20px;
-  max-width: 960px;
-  color: #FFF;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: -0.3px;
-  line-height: 1.04;
-}
-
-// Lineage: Ready for mapping
-.course-hero__pre {
-  display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 28px;
-  letter-spacing: -0.5px;
-  line-height: 1.04;
-}
-
-// Lineage: Ready for mapping
-.experience__item {
-  display: flex;
-  flex-direction: column;
-  background: #FFF;
-  border: 1px solid #E6E8EE;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(13, 20, 55, 0.05), 0 4px 12px rgba(13, 20, 55, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-// Lineage: Ready for mapping
-.check-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-// Lineage: Ready for mapping
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-// Lineage: Ready for mapping
-.user-custom--entry-reqs {
-  ;
-}
-
-// Lineage: Ready for mapping
-.course-hero__content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-// Lineage: Ready for mapping
-.user-custom--progression {
-  ;
-}
-
-// Lineage: Ready for mapping
-.key-facts__item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1 1 calc(50% - 16px);
-}
-
-// Lineage: Ready for mapping
-.user-custom--experience {
-  ;
-}
-
-// Lineage: Ready for mapping
-.outcomes__lede {
-  margin: 0;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.2px;
-  color: #1A2238;
-  line-height: 1.4;
-}
-
-// Lineage: Ready for mapping
-.section-header--compact {
-  margin-bottom: 20px;
-}
-
-// Lineage: Ready for mapping
-.key-facts__body {
-  min-width: 0;
-}
-
-// Lineage: Ready for mapping
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-// Lineage: Ready for mapping
-.course-hero__inner {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-// Lineage: Ready for mapping
-.wrap {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-// Lineage: Ready for mapping
-.experience__body {
-  padding: 16px;
-}
-
-// Lineage: Ready for mapping
-.in-demand__num {
-  margin: 0 0 12px;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 52px;
-  letter-spacing: -0.5px;
-  color: #6D28D9;
-  line-height: 1;
-}
-
-// Lineage: Ready for mapping
-.user-custom--ai-native {
-  ;
-}
-
-// Lineage: Ready for mapping
-.course-hero__title {
-  display: block;
-  margin-top: 8px;
-  color: #B5A0FF;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 38px;
-  letter-spacing: -1px;
-  line-height: 1.04;
-}
-
-// Lineage: Ready for mapping
-.partner-chips__item:hover {
-  transform: translatey(-1px);
-  border-color: #7C3AED;
-}
-
-// Lineage: Ready for mapping
-.advisor__method-label {
-  margin: 0;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #FFF;
-  line-height: 1.35;
-}
-
-// Lineage: Ready for mapping
-body {
-  font-family: "Manrope", system-ui, -apple-system, sans-serif;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #0B1020;
-  background: #F8F9FC;
-  -webkit-font-smoothing: antialiased;
-  text-wrap: pretty;
-}
-
-// Lineage: Ready for mapping
-.course-hero .rank-card {
-  grid-area: rank;
-  align-self: start;
-}
-
-// Lineage: Ready for mapping
-.section-header__title {
-  margin: 0;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.5px;
-  color: #7C3AED;
-  line-height: 1.2;
-}
-
-// Lineage: Ready for mapping
-.experience__title {
-  margin: 0 0 4px;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: normal;
-  line-height: 1.04;
-  color: #0B1020;
-}
-
-// Lineage: Ready for mapping
-.footer__list-item {
-  ;
-}
-
-// Lineage: Ready for mapping
-.experience__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-// Lineage: Ready for mapping
-.user-custom--alumni {
-  ;
-}
-
-// Lineage: Ready for mapping
-.user-custom--main {
-  ;
-}
-
-// Lineage: Ready for mapping
-.key-facts__title {
-  margin: 0;
-  color: #FFF;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 1.1;
-}
-
-// Lineage: Ready for mapping
-.user-custom--hero {
-  ;
-}
-
-// Lineage: Ready for mapping
 .advisor__method-icon {
   width: 36px;
   height: 36px;
@@ -288,115 +13,13 @@ body {
 }
 
 // Lineage: Ready for mapping
-.footer__bottom-item {
+.user-custom--entry-reqs {
   ;
 }
 
 // Lineage: Ready for mapping
-.user-custom--industry {
+.topbar__nav-item {
   ;
-}
-
-// Lineage: Ready for mapping
-.experience__desc {
-  margin: 0;
-  font-size: 14px;
-  color: #6B7280;
-  line-height: 1.5;
-}
-
-// Lineage: Ready for mapping
-.user-custom--dark .section-header__title {
-  color: #FFF;
-}
-
-// Lineage: Ready for mapping
-.in-demand__eyebrow {
-  margin: 0 0 12px;
-  text-transform: uppercase;
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
-  color: #6D28D9;
-}
-
-// Lineage: Ready for mapping
-.course-hero .key-facts {
-  grid-area: facts;
-}
-
-// Lineage: Ready for mapping
-.section-link:focus-visible {
-  outline: 3px solid #7C3AED;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-// Lineage: Ready for mapping
-.course-hero__heading {
-  margin: 0 0 24px;
-  line-height: 1.05;
-  color: #B5A0FF;
-}
-
-// Lineage: Ready for mapping
-.section-header__badge--on-purple {
-  background: #FFF;
-  color: #6D28D9;
-}
-
-// Lineage: Ready for mapping
-.user-custom--dark .section-header__sub {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-// Lineage: Ready for mapping
-.key-facts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-// Lineage: Ready for mapping
-.course-hero__ctas {
-  grid-area: ctas;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-// Lineage: Ready for mapping
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-// Lineage: Ready for mapping
-.user-custom--advisor {
-  ;
-}
-
-// Lineage: Ready for mapping
-.user-custom--programme {
-  ;
-}
-
-// Lineage: Ready for mapping
-.partner-chips__item {
-  background: #FFF;
-  border: 1.5px solid #E6E8EE;
-  border-radius: 12px;
-  padding: 16px 12px;
-  text-align: center;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0B1020;
-  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 // Lineage: Ready for mapping
@@ -415,30 +38,59 @@ html, body {
 }
 
 // Lineage: Ready for mapping
-.advisor__methods {
-  list-style: none;
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+// Lineage: Ready for mapping
+.user-custom--course-hero {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero__pre {
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  line-height: 1.04;
+}
+
+// Lineage: Ready for mapping
+.experience__title {
+  margin: 0 0 4px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: normal;
+  line-height: 1.04;
+  color: #0B1020;
+}
+
+// Lineage: Ready for mapping
+.advisor__method-label {
   margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  align-items: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFF;
+  line-height: 1.35;
 }
 
 // Lineage: Ready for mapping
-.partner-chips {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-// Lineage: Ready for mapping
-.advisor__method:hover {
-  background: rgba(255, 255, 255, 0.18);
-  transform: translatey(-1px);
+.partner-chips__item {
+  background: #FFF;
+  border: 1.5px solid #E6E8EE;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0B1020;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 // Lineage: Ready for mapping
@@ -458,13 +110,16 @@ html, body {
 }
 
 // Lineage: Ready for mapping
-.user-custom--dark {
-  ;
+.advisor__method:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translatey(-1px);
 }
 
 // Lineage: Ready for mapping
-.user-custom--apply-banner {
-  ;
+.entry-reqs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
 }
 
 // Lineage: Ready for mapping
@@ -475,13 +130,249 @@ html, body {
 }
 
 // Lineage: Ready for mapping
-.experience {
+.button--primary-purple {
+  background: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 100%);
+  color: #FFF;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+}
+
+// Lineage: Ready for mapping
+.footer__bottom-item {
+  ;
+}
+
+// Lineage: Ready for mapping
+.user-custom--dark {
+  ;
+}
+
+// Lineage: Ready for mapping
+.outcomes__lede {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  color: #1A2238;
+  line-height: 1.4;
+}
+
+// Lineage: Ready for mapping
+.course-hero__content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Lineage: Ready for mapping
+.user-custom--footer {
+  ;
+}
+
+// Lineage: Ready for mapping
+.check-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Lineage: Ready for mapping
+.partner-chips__item:hover {
+  transform: translatey(-1px);
+  border-color: #7C3AED;
+}
+
+// Lineage: Ready for mapping
+.user-custom {
+  ;
+}
+
+// Lineage: Ready for mapping
+.user-custom--alumni {
+  ;
+}
+
+// Lineage: Ready for mapping
+.key-facts__title {
+  margin: 0;
+  color: #FFF;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+// Lineage: Ready for mapping
+.course-hero__title {
+  display: block;
+  margin-top: 8px;
+  color: #B5A0FF;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 38px;
+  letter-spacing: -1px;
+  line-height: 1.04;
+}
+
+// Lineage: Ready for mapping
+.experience__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Lineage: Ready for mapping
+.section-header--compact {
+  margin-bottom: 20px;
+}
+
+// Lineage: Ready for mapping
+.user-custom--dark .section-header__sub {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+// Lineage: Ready for mapping
+.partner-chips {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+// Lineage: Ready for mapping
+.user-custom--outcomes {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero__ctas {
+  grid-area: ctas;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 12px;
+}
+
+// Lineage: Ready for mapping
+.experience__item:hover {
+  transform: translatey(-3px);
+  box-shadow: 0 1px 2px rgba(13, 20, 55, 0.04), 0 8px 24px rgba(13, 20, 55, 0.06);
+  border-color: #C9D3FF;
+}
+
+// Lineage: Ready for mapping
+.section-header__badge--on-purple {
+  background: #FFF;
+  color: #6D28D9;
+}
+
+// Lineage: Ready for mapping
+.experience__body {
+  padding: 16px;
+}
+
+// Lineage: Ready for mapping
+.footer__list-item {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero__cta {
+  width: 100%;
+}
+
+// Lineage: Ready for mapping
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Lineage: Ready for mapping
+.user-custom--apply-banner {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero .rank-card {
+  grid-area: rank;
+  align-self: start;
+}
+
+// Lineage: Ready for mapping
+.course-hero__heading {
+  margin: 0 0 24px;
+  line-height: 1.05;
+  color: #B5A0FF;
+}
+
+// Lineage: Ready for mapping
+.in-demand__eyebrow {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  color: #6D28D9;
+}
+
+// Lineage: Ready for mapping
+.user-custom--future-careers {
+  ;
+}
+
+// Lineage: Ready for mapping
+.key-facts__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 calc(50% - 16px);
+}
+
+// Lineage: Ready for mapping
+.in-demand__desc {
+  margin: 0;
+  font-size: 20px;
+  color: #1A2238;
+  line-height: 1.5;
+}
+
+// Lineage: Ready for mapping
+body {
+  font-family: "Manrope", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #0B1020;
+  background: #F8F9FC;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+// Lineage: Ready for mapping
+.user-custom--advisor {
+  ;
+}
+
+// Lineage: Ready for mapping
+.user-custom--ai-native {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero__tagline {
+  margin: 0 0 20px;
+  max-width: 960px;
+  color: #FFF;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.3px;
+  line-height: 1.04;
 }
 
 // Lineage: Ready for mapping
@@ -498,49 +389,76 @@ html, body {
 }
 
 // Lineage: Ready for mapping
-.key-facts__meta {
-  margin: 2px 0 0;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 11.5px;
+.user-custom--dark .section-header__title {
+  color: #FFF;
 }
 
 // Lineage: Ready for mapping
-.experience__item:hover {
-  transform: translatey(-3px);
-  box-shadow: 0 1px 2px rgba(13, 20, 55, 0.04), 0 8px 24px rgba(13, 20, 55, 0.06);
-  border-color: #C9D3FF;
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
 // Lineage: Ready for mapping
-.entry-reqs {
+.experience__desc {
+  margin: 0;
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+// Lineage: Ready for mapping
+.experience {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 // Lineage: Ready for mapping
-.button--primary-purple {
-  background: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 100%);
-  color: #FFF;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
-}
-
-// Lineage: Ready for mapping
-.topbar__nav-item {
+.user-custom--experience {
   ;
 }
 
 // Lineage: Ready for mapping
-.user-custom--footer {
+.user-custom--industry {
   ;
 }
 
 // Lineage: Ready for mapping
-.in-demand__desc {
+.key-facts {
+  list-style: none;
   margin: 0;
-  font-size: 20px;
-  color: #1A2238;
-  line-height: 1.5;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+// Lineage: Ready for mapping
+.in-demand__num {
+  margin: 0 0 12px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 52px;
+  letter-spacing: -0.5px;
+  color: #6D28D9;
+  line-height: 1;
+}
+
+// Lineage: Ready for mapping
+.experience__item {
+  display: flex;
+  flex-direction: column;
+  background: #FFF;
+  border: 1px solid #E6E8EE;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(13, 20, 55, 0.05), 0 4px 12px rgba(13, 20, 55, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 // Lineage: Ready for mapping
@@ -551,11 +469,93 @@ html, body {
 }
 
 // Lineage: Ready for mapping
-.user-custom--course-hero {
+.key-facts__body {
+  min-width: 0;
+}
+
+// Lineage: Ready for mapping
+.user-custom--progression {
   ;
 }
 
 // Lineage: Ready for mapping
-.course-hero__cta {
+.course-hero__inner {
   width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+// Lineage: Ready for mapping
+.user-custom--hero {
+  ;
+}
+
+// Lineage: Ready for mapping
+.user-custom--main {
+  ;
+}
+
+// Lineage: Ready for mapping
+.course-hero .key-facts {
+  grid-area: facts;
+}
+
+// Lineage: Ready for mapping
+.section-link:focus-visible {
+  outline: 3px solid #7C3AED;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Lineage: Ready for mapping
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+// Lineage: Ready for mapping
+.key-facts__meta {
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11.5px;
+}
+
+// Lineage: Ready for mapping
+.advisor {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 60%, #6D28D9 100%);
+  border-radius: 20px;
+  padding: 30px;
+  color: #FFF;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Lineage: Ready for mapping
+.user-custom--programme {
+  ;
+}
+
+// Lineage: Ready for mapping
+.advisor__methods {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+// Lineage: Ready for mapping
+.section-header__title {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  color: #7C3AED;
+  line-height: 1.2;
 }
