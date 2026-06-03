@@ -69,9 +69,13 @@
         .res-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.8rem; }
         .res-table th, .res-table td { padding: 14px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
         .res-table th { background: var(--bg-card); color: var(--accent-blue); font-weight: 600; border-top: 1px solid var(--border); }
-        .res-table th:nth-child(1), .res-table td:nth-child(1) { width: 25%; border-left: 1px solid var(--border); font-size: 0.75rem; }
-        .res-table th:nth-child(2), .res-table td:nth-child(2) { width: 35%; }
-        .res-table th:nth-child(3), .res-table td:nth-child(3) { width: 40%; border-right: 1px solid var(--border); }
+        .res-table th:nth-child(1), .res-table td:nth-child(1) { width: 25%; font-size: 0.75rem; }
+        .res-table th:nth-child(2), .res-table td:nth-child(2) { width: 35%; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+        .res-table th:nth-child(3), .res-table td:nth-child(3) { width: 40%; }
+
+        .parent-row { background: var(--bg-editor); }
+        .child-override-row { background: #0b0f19; }
+        .child-override-row td { padding-top: 8px; padding-bottom: 8px; }
 
         .res-swatch { display: inline-block; vertical-align: middle; }
 
@@ -80,13 +84,32 @@
         select.editable-node, input.editable-node { display: inline-block; }
         select.editable-node { appearance: none; padding-right: 24px; }
 
+        .tree-line { position: relative; padding-left: 20px; display: flex; align-items: center; gap: 6px; width: 100%; margin-bottom: 4px; }
+        .tree-line::before { content: ''; position: absolute; top: -10px; left: 6px; border-left: 1px solid #334155; border-bottom: 1px solid #334155; width: 10px; height: 24px; border-bottom-left-radius: 4px; }
+        .tree-root::before { display: none; }
+
+        .threat-node-critical { background-color: rgba(76, 5, 25, 0.4); border-left: 2px solid #f43f5e; }
+        .threat-node-warning { background-color: rgba(66, 32, 6, 0.4); border-left: 2px solid #eab308; }
+        .threat-node-safe { border-left: 2px solid transparent; }
+        .threat-node-safe:hover { background-color: rgba(30, 41, 59, 0.3); }
+
         .suggestion-badge { margin-top: 8px; font-size: 0.65rem; padding: 4px 8px; border-radius: 4px; display: inline-block; cursor: pointer; transition: background 0.2s; }
         .suggestion-badge:hover { filter: brightness(1.2); }
         .suggestion-badge.high { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
         .suggestion-badge.med { background: rgba(245, 158, 11, 0.15); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.3); }
         .suggestion-badge.low { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid var(--border); }
 
-        /* Accordions and Matrices */
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+        .tooltip-container .tooltip-text {
+            visibility: hidden; width: max-content; max-width: 350px; background-color: #0f172a; color: var(--accent-neon);
+            text-align: left; padding: 12px; border-radius: 4px; position: absolute; z-index: 100;
+            top: 125%; left: 0; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; border: 1px solid var(--border);
+            word-wrap: break-word; box-shadow: 0px 4px 12px rgba(0,0,0,0.8);
+        }
+        .tooltip-container .tooltip-text.active { visibility: visible; opacity: 1; pointer-events: auto; }
+        .lineage-icon { font-size: 0.85rem; color: var(--accent-blue); cursor: pointer; padding: 2px 4px; border-radius: 4px; border: 1px solid transparent; transition: all 0.2s; }
+        .lineage-icon:hover { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); }
+
         .accordion-item { border: 1px solid var(--border); margin-bottom: 8px; border-radius: 6px; background: var(--bg-card); overflow: hidden; flex-shrink: 0; }
         .accordion-header { padding: 10px 16px; background: #0f172a; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .category-title { font-weight: 600; color: var(--accent-purple); text-transform: uppercase; font-size: 0.85rem; }
@@ -162,10 +185,10 @@
           </div>
 
           <nav class="hud-tabs">
-            <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO</button>
-            <button class="tab-btn" data-target="view-source-scss" id="tab-source-btn">2. SOURCE SCSS</button>
-            <button class="tab-btn" data-target="view-contrast">3. CONTRAST</button>
-            <button class="tab-btn" data-target="view-sandbox">4. HTML SANDBOX</button>
+            <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+1]</span></button>
+            <button class="tab-btn" data-target="view-source-scss" id="tab-source-btn">2. SOURCE SCSS <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+2]</span></button>
+            <button class="tab-btn" data-target="view-contrast">3. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+3]</span></button>
+            <button class="tab-btn" data-target="view-sandbox">4. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+4]</span></button>
           </nav>
         </header>
 
@@ -177,7 +200,7 @@
             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                 <div>
                     <h3 style="color: var(--accent-blue); margin-bottom: 8px;">Map Tokens to Brand Guide (AST Line Mode)</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Set bulk maps in the primary row, or expand to override exact file-lines.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Set bulk maps in the primary row, or expand to override exact file-lines securely inline.</p>
                 </div>
             </div>
 
@@ -237,6 +260,22 @@
     let LINEAGE_DATA = {};
     let SOURCE_SCSS_DATA = {};
 
+    document.addEventListener('keydown', (e) => {
+        if (e.altKey) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            if (e.key === '1' && tabs[0]) { e.preventDefault(); tabs[0].click(); }
+            if (e.key === '2' && tabs[1]) { e.preventDefault(); tabs[1].click(); }
+            if (e.key === '3' && tabs[2]) { e.preventDefault(); tabs[2].click(); }
+            if (e.key === '4' && tabs[3]) { e.preventDefault(); tabs[3].click(); }
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.tooltip-container')) {
+            document.querySelectorAll('.tooltip-text.active').forEach(el => el.classList.remove('active'));
+        }
+    });
+
     function debounce(func, wait) {
         let timeout;
         return function(...args) {
@@ -285,7 +324,6 @@
     gotoBtn.addEventListener('click', jumpToLine);
     gotoInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') jumpToLine(); });
 
-    // Jump-to-Source Trigger API for the UI links
     window.jumpToSource = function(filename, lineNumber) {
         document.getElementById('tab-source-btn').click();
         const select = document.getElementById('source-file-select');
@@ -400,7 +438,6 @@
             .then(data => {
                 BRAND_GUIDE = data.brand_guide || {};
                 LINEAGE_DATA = {};
-                // V8.10 Data structure is now proper array for Option A rendering
                 if (data.lineage) { LINEAGE_DATA = data.lineage; }
                 SOURCE_SCSS_DATA = data.source_scss_files || {};
 
@@ -557,9 +594,51 @@
         document.getElementById('pipeline-styles').innerHTML = cssLines.join('\n');
       }
 
+      getLineageIcon(val) {
+          if (LINEAGE_DATA && LINEAGE_DATA[val]) {
+              const originArr = Array.isArray(LINEAGE_DATA[val]) ? LINEAGE_DATA[val] : (LINEAGE_DATA[val] ? LINEAGE_DATA[val].split(' | ') : []);
+              let formattedList = "";
+
+              originArr.forEach(orig => {
+                  if (orig.includes(':')) {
+                      const parts = orig.split(':');
+                      formattedList += `
+                      <div class="tree-line threat-node-safe">
+                          <div class="editable-node">
+                              <span>${parts[0]}</span>
+                              <span style="color:var(--accent-blue);">Line ${parts[1]}</span>
+                          </div>
+                      </div>`;
+                  } else {
+                      formattedList += `
+                      <div class="tree-line threat-node-warning">
+                          <div class="editable-node">
+                              <span>${orig}</span>
+                              <span style="color:var(--accent-orange);">Dynamic Var</span>
+                          </div>
+                      </div>`;
+                  }
+              });
+
+              return `
+              <div class="tooltip-container">
+                  <span class="lineage-icon font-mono" onclick="
+                      const isActive = this.nextElementSibling.classList.contains('active');
+                      document.querySelectorAll('.tooltip-text.active').forEach(el => el.classList.remove('active'));
+                      if (!isActive) this.nextElementSibling.classList.add('active');
+                      event.stopPropagation();
+                  ">[Trace 👁️]</span>
+                  <div class="tooltip-text">
+                    <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">AST Lineage Trace</div>
+                    ${formattedList}
+                  </div>
+              </div>`;
+          }
+          return '';
+      }
+
       renderResolutionStudio() {
         const tbody = document.getElementById('resolution-tbody');
-        tbody.innerHTML = '';
         const unbranded = this.tokens.filter(t => t.isExtracted);
 
         if (unbranded.length === 0) {
@@ -567,17 +646,20 @@
             return;
         }
 
+        let htmlBuffer = '';
+
         unbranded.forEach(t => {
-            // Options builder for drop downs
+            const tId = t.name.replace(/[^a-zA-Z0-9]/g, '');
+
             let brandOptions = '<option value="">-- Select or Map to Global --</option>';
             const bgCat = (t.category === 'Colors') ? 'colors' : (t.category === 'Typography') ? 'typography' : (t.category === 'Spacing') ? 'spacing' : null;
+
             if (bgCat && BRAND_GUIDE[bgCat]) {
                 Object.entries(BRAND_GUIDE[bgCat]).forEach(([bName, bVal]) => {
                     brandOptions += `<option value="${bName}">${bName} (${bVal})</option>`;
                 });
             }
 
-            // Visual Assessment Builder
             let suggestionHtml = '';
             let rawVisual = '', suggVisual = '';
             const suggestion = this.findNearestMatch(t.category, t.value);
@@ -619,35 +701,21 @@
                 suggestionHtml = `<div class="font-mono" style="color:var(--text-muted); font-size:0.75rem;">${t.value}</div>`;
             }
 
-            // Build the AST Array Lines (Option A UI)
-            const lineageArray = LINEAGE_DATA[t.value] || [];
-            let childRowsHtml = '';
+            let lineageIcon = this.getLineageIcon(t.value);
+            const lineageArray = Array.isArray(LINEAGE_DATA[t.value]) ? LINEAGE_DATA[t.value] : (LINEAGE_DATA[t.value] ? LINEAGE_DATA[t.value].split(' | ') : []);
 
-            lineageArray.forEach((orig) => {
-                let parts = orig.split(':');
-                let file = parts[0];
-                let line = parts[1];
-
-                childRowsHtml += `
-                <div class="child-override-row" data-file="${file}" data-line="${line}" style="display:flex; justify-content:space-between; align-items:center; padding: 6px 12px; border-bottom: 1px dashed var(--border);">
-                    <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; gap: 8px; align-items:center; cursor:pointer;" onclick="window.jumpToSource('${file}', ${line})">
-                        <span style="color: var(--accent-blue);">↳ ${file}</span>
-                        <span style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; color:#fff;">Line ${line}</span>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <select class="editable-node font-mono child-select" style="width:160px;" onchange="this.nextElementSibling.value='';">${brandOptions}</select>
-                        <input type="text" class="editable-node font-mono child-input" style="width:140px;" placeholder="Override line..." />
-                    </div>
-                </div>`;
-            });
-
-            // Render Parent Row
-            tbody.innerHTML += `
-                <tr class="parent-row" data-extracted="${t.name}" data-value="${t.value.replace(/"/g, "&quot;")}">
+            htmlBuffer += `
+                <tr class="parent-row" data-extracted="${t.name}" data-value="${t.value.replace(/"/g, "&quot;")}" data-extracted-id="${tId}">
                     <td style="font-weight:bold; color:var(--text-main);">
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <span class="font-mono" style="font-size:1rem;">${t.value}</span>
-                            <button class="hud-btn" style="width:fit-content; font-size:0.65rem;" onclick="const p = this.closest('tr').nextElementSibling; p.style.display = p.style.display === 'none' ? 'table-row' : 'none';">
+                            ${lineageIcon}
+                            <button class="hud-btn" style="width:fit-content; font-size:0.65rem; margin-top:8px;" onclick="
+                                const targetClass = 'child-of-${tId}';
+                                document.querySelectorAll('.' + targetClass).forEach(row => {
+                                    row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+                                });
+                            ">
                                 View/Edit ${lineageArray.length} Instances ▼
                             </button>
                         </div>
@@ -663,13 +731,40 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="child-container-row" style="display:none; background: #0b0f19;">
-                    <td colspan="3" style="padding:0;">
-                        ${childRowsHtml}
-                    </td>
-                </tr>
             `;
+
+            lineageArray.forEach((orig) => {
+                let file = "Unknown", line = "N/A";
+                if (orig.includes(':')) {
+                    let parts = orig.split(':');
+                    file = parts[0];
+                    line = parts[1];
+                } else {
+                    file = orig;
+                }
+
+                htmlBuffer += `
+                <tr class="child-override-row child-of-${tId}" data-parent="${tId}" data-file="${file}" data-line="${line}" style="display:none;">
+                    <td style="padding-left: 24px; border-left: 2px solid var(--accent-blue);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; gap: 8px; align-items:center; cursor:pointer;" onclick="window.jumpToSource('${file}', ${line})">
+                            <span>↳ ${file}</span>
+                            <span style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; color:#fff;">Line ${line}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="color:var(--text-muted); font-size:0.65rem;">Override specific line ➔</span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap: 8px;">
+                            <select class="editable-node font-mono child-select" onchange="this.nextElementSibling.value='';">${brandOptions}</select>
+                            <input type="text" class="editable-node font-mono child-input" placeholder="Override line..." />
+                        </div>
+                    </td>
+                </tr>`;
+            });
         });
+
+        tbody.innerHTML = htmlBuffer;
       }
 
       getLuminance(val) {
@@ -691,16 +786,18 @@
 
       renderContrast() {
           const cont = document.getElementById('contrast-matrix-container');
-          cont.innerHTML = '';
           const colors = this.tokens.filter(t => t.category === 'Colors');
 
           if(colors.length < 2) {
               cont.innerHTML = '<p class="empty-state" style="grid-column: 1 / -1;">Need at least two colors to calculate contrast.</p>';
               return;
           }
-          const half = Math.ceil(colors.length / 2);
-          const bgs = colors.slice(0, half);
-          const txts = colors.slice(half);
+
+          let htmlBuffer = '';
+          const limitedColors = colors.slice(0, 40);
+          const half = Math.ceil(limitedColors.length / 2);
+          const bgs = limitedColors.slice(0, half);
+          const txts = limitedColors.slice(half);
 
           bgs.forEach(bg => {
              txts.forEach(txt => {
@@ -709,7 +806,7 @@
                      if(ratio) {
                          const isPass = ratio >= 4.5;
                          const badgeColor = isPass ? 'var(--accent-green)' : 'var(--accent-pink)';
-                         cont.innerHTML += `<div class="matrix-card" style="background-color: ${bg.value}; border: 1px solid var(--border);">
+                         htmlBuffer += `<div class="matrix-card" style="background-color: ${bg.value}; border: 1px solid var(--border);">
                             <div class="matrix-text" style="color: ${txt.value};">${txt.name} <br><span style="font-size:0.7rem;opacity:0.7;">on</span><br> ${bg.name}</div>
                             <div class="matrix-meta" style="color: ${txt.value};">
                                 <span>Ratio: ${ratio.toFixed(2)}</span>
@@ -720,6 +817,7 @@
                  }
              });
           });
+          cont.innerHTML = htmlBuffer;
       }
 
       exportResolutionMap() {
@@ -727,39 +825,34 @@
 
           document.querySelectorAll('.parent-row').forEach(tr => {
              const rawVal = tr.getAttribute('data-value');
+             const parentId = tr.getAttribute('data-extracted-id');
 
-             // Get Bulk Mapping (if any)
              const bulkSelected = tr.querySelector('select.bulk-select').value;
              const bulkCustom = tr.querySelector('input.bulk-custom').value;
              let bulkFinalName = bulkCustom.trim() || bulkSelected;
              if (bulkFinalName && !bulkFinalName.startsWith('$')) bulkFinalName = '$' + bulkFinalName;
 
-             // Check all associated child rows
-             const childContainer = tr.nextElementSibling;
-             if (childContainer && childContainer.classList.contains('child-container-row')) {
-                 childContainer.querySelectorAll('.child-override-row').forEach(child => {
-                     const cFile = child.getAttribute('data-file');
-                     const cLine = parseInt(child.getAttribute('data-line'));
+             document.querySelectorAll(`.child-override-row[data-parent="${parentId}"]`).forEach(child => {
+                 const cFile = child.getAttribute('data-file');
+                 const cLine = parseInt(child.getAttribute('data-line'));
 
-                     const cSelected = child.querySelector('select.child-select').value;
-                     const cCustom = child.querySelector('input.child-input').value;
+                 const cSelected = child.querySelector('select.child-select').value;
+                 const cCustom = child.querySelector('input.child-input').value;
 
-                     let childFinalName = cCustom.trim() || cSelected;
-                     if (childFinalName && !childFinalName.startsWith('$')) childFinalName = '$' + childFinalName;
+                 let childFinalName = cCustom.trim() || cSelected;
+                 if (childFinalName && !childFinalName.startsWith('$')) childFinalName = '$' + childFinalName;
 
-                     // Resolution Hierarchy: Child Override > Bulk Mapping
-                     const finalTarget = childFinalName || bulkFinalName;
+                 const finalTarget = childFinalName || bulkFinalName;
 
-                     if (finalTarget) {
-                         mappingArray.push({
-                             file: cFile,
-                             line: cLine,
-                             raw: rawVal,
-                             mapped: finalTarget
-                         });
-                     }
-                 });
-             }
+                 if (finalTarget) {
+                     mappingArray.push({
+                         file: cFile,
+                         line: cLine,
+                         raw: rawVal,
+                         mapped: finalTarget
+                     });
+                 }
+             });
           });
 
           if (mappingArray.length === 0) return alert('No mappings defined. Please assign a bulk token or override at least one line before exporting.');
