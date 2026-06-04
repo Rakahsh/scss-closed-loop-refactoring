@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import cssutils
 import logging
@@ -10,13 +11,27 @@ def parse_css(filepath):
     except:
         with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
             stylesheet = parser.parseString(f.read())
+
     rules = {}
-    for rule in stylesheet:
+
+    # RECURSIVE ENGINE: Now crawls inside nested @media blocks
+    def process_rule(rule, media_prefix=""):
         if rule.type == rule.STYLE_RULE:
-            selector = rule.selectorText.strip().lower() if config.CRAWL_SETTINGS["lowercase_selectors"] else rule.selectorText.strip()
+            raw_sel = rule.selectorText.strip().lower() if config.CRAWL_SETTINGS["lowercase_selectors"] else rule.selectorText.strip()
+            selector = f"{media_prefix} {raw_sel}".strip()
             properties = {p.name.strip(): p.value.strip() for p in rule.style}
             if selector in rules: rules[selector].update(properties)
             else: rules[selector] = properties
+        elif rule.type == rule.MEDIA_RULE:
+            try:
+                media_query = f"@media {rule.media.mediaText}"
+                for sub_rule in rule.cssRules:
+                    process_rule(sub_rule, media_prefix=media_query)
+            except: pass
+
+    for rule in stylesheet:
+        process_rule(rule)
+
     return rules
 
 def compute_discrepancies(file_a, file_b, elapsed_time):

@@ -85,6 +85,7 @@
         .res-table th:nth-child(2), .res-table td:nth-child(2) { width: 35%; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
         .res-table th:nth-child(3), .res-table td:nth-child(3) { width: 40%; }
 
+        .parent-row > td:nth-child(1) { outline: solid 1px yellow; }
         .parent-row { background: var(--bg-editor); transition: background 0.3s, box-shadow 0.2s; cursor: pointer; }
         .parent-row.has-mapping { background: var(--mapped-row); }
         /* YOUR CUSTOM UX RESTORED: */
@@ -180,16 +181,18 @@
                 </button>
                 <h2 class="title-neon" style="margin-left: 12px;">SYS.OUTPUT // Copilot Editor</h2>
             </div>
-            <div class="action-group">
+            <div class="action-group" style="display: flex; align-items: center;">
+              <span id="draft-status" style="color: var(--text-muted); font-size: 0.7rem; margin-right: 12px; font-family: var(--font-mono);"></span>
+              <button id="btn-clear-draft" class="hud-btn" style="margin-right: 8px; border-color: var(--accent-orange); color: var(--accent-orange);">CLEAR DRAFT</button>
               <button id="btn-export-res" class="hud-btn success">EXPORT RESOLUTION MAP</button>
             </div>
           </div>
 
           <nav class="hud-tabs">
-            <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+1]</span></button>
-            <button class="tab-btn" data-target="view-contrast">2. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+2]</span></button>
-            <button class="tab-btn" data-target="view-sandbox">3. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+3]</span></button>
-            <button class="tab-btn" data-target="view-tools">4. TOOLS <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Alt+4]</span></button>
+            <button class="tab-btn active" data-target="view-resolution">1. RESOLUTION STUDIO <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Ctrl+Shift+1]</span></button>
+            <button class="tab-btn" data-target="view-contrast">2. CONTRAST <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Ctrl+Shift+2]</span></button>
+            <button class="tab-btn" data-target="view-sandbox">3. HTML SANDBOX <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Ctrl+Shift+3]</span></button>
+            <button class="tab-btn" data-target="view-tools">4. TOOLS <span style="opacity:0.4; margin-left:4px; font-size:0.6rem;">[Ctrl+Shift+4]</span></button>
           </nav>
         </header>
 
@@ -330,17 +333,16 @@
     let SELECTOR_MAP = {};
 
     document.addEventListener('keydown', (e) => {
-        if (e.altKey) {
+        if (e.ctrlKey && e.shiftKey) {
             const tabs = document.querySelectorAll('.tab-btn');
-            if (e.key === '1' && tabs[0]) { e.preventDefault(); tabs[0].click(); }
-            if (e.key === '2' && tabs[1]) { e.preventDefault(); tabs[1].click(); }
-            if (e.key === '3' && tabs[2]) { e.preventDefault(); tabs[2].click(); }
-            // NEW HOOK
-            if (e.key === '4' && tabs[3]) { e.preventDefault(); tabs[3].click(); }
-            if (e.key === 's' || e.key === 'S') {
+            if (e.code === 'Digit1' && tabs[0]) { e.preventDefault(); tabs[0].click(); }
+            if (e.code === 'Digit2' && tabs[1]) { e.preventDefault(); tabs[1].click(); }
+            if (e.code === 'Digit3' && tabs[2]) { e.preventDefault(); tabs[2].click(); }
+            if (e.code === 'Digit4' && tabs[3]) { e.preventDefault(); tabs[3].click(); }
+            if (e.code === 'KeyS') {
                 e.preventDefault();
                 const sp = document.getElementById('source-panel-container');
-                sp.classList.toggle('active');
+                if (sp) sp.classList.toggle('active');
             }
         }
     });
@@ -870,8 +872,8 @@
                 <div class="suggestion-badge ${badgeClass}" onclick="window.setMapping(this, '${suggestion.name}')">↳ Map to: ${suggestion.name} (${suggestion.score.toFixed(1)}%)</div>`;
             } else suggestionHtml = `<div class="font-mono" style="color:var(--text-main); font-size:0.75rem; padding:10px;">${t.value}</div>`;
 
-            let lineageIcon = this.getLineageIcon(t.value);
-            const lineageArray = Array.isArray(LINEAGE_DATA[t.value]) ? LINEAGE_DATA[t.value] : (LINEAGE_DATA[t.value] ? LINEAGE_DATA[t.value].split(' | ') : []);
+            let lineageIcon = this.getLineageIcon(t.name);
+            const lineageArray = Array.isArray(LINEAGE_DATA[t.name]) ? LINEAGE_DATA[t.name] : (LINEAGE_DATA[t.name] ? LINEAGE_DATA[t.name].split(' | ') : []);
 
             htmlBuffer += `
                 <tr class="parent-row" data-extracted="${t.name}" data-value="${t.value.replace(/"/g, "&quot;")}" data-extracted-id="${tId}" data-category="${t.category}">
@@ -909,8 +911,8 @@
 
                 htmlBuffer += `
                 <tr class="child-override-row child-of-${tId}" data-parent="${tId}" data-file="${file}" data-line="${line}" style="display:none;">
-                    <td style="padding-left: 24px; border-left: 2px solid var(--accent-blue);">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; gap: 8px; align-items:center; cursor:pointer;" onclick="window.jumpToSource('${file}', ${line})">
+                    <td style="padding-left: 24px; border-left: 2px solid var(--accent-blue); cursor: pointer;" onclick="window.jumpToSource('${file}', ${line})">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; gap: 8px; align-items:center; pointer-events: none;">
                             <span>↳ ${file}</span>
                             <span style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; color:#fff;">Line ${line}</span>
                         </div>
@@ -927,6 +929,7 @@
         });
 
         tbody.innerHTML = htmlBuffer;
+        window.loadDraftState();
       }
       getLuminance(val) {
         const rgb = this.hexToRgb(val);
@@ -1007,9 +1010,74 @@
           link.href = URL.createObjectURL(blob);
           link.download = `resolution_map.json`;
           link.click();
+          localStorage.removeItem('scss_copilot_draft');
           alert("resolution_map.json built for AST line-mutation! Downloaded! Move to /config_data/ and press 'r' in Python terminal to rewrite.");
       }
     }
+
+
+    window.saveDraftState = function() {
+        const draft = {};
+        document.querySelectorAll('.parent-row').forEach(tr => {
+            const id = tr.getAttribute('data-extracted-id');
+            const sel = tr.querySelector('.bulk-select').value;
+            const cust = tr.querySelector('.bulk-custom').value;
+            if (sel || cust) draft[id] = { type: 'parent', sel, cust };
+
+            document.querySelectorAll(`.child-of-${id}`).forEach(cRow => {
+                const cFile = cRow.getAttribute('data-file');
+                const cLine = cRow.getAttribute('data-line');
+                const cSel = cRow.querySelector('.child-select').value;
+                const cCust = cRow.querySelector('.child-input').value;
+                if (cSel || cCust) {
+                    draft[`${id}::${cFile}::${cLine}`] = { type: 'child', sel: cSel, cust: cCust };
+                }
+            });
+        });
+        localStorage.setItem('scss_copilot_draft', JSON.stringify(draft));
+
+        const now = new Date();
+        const stat = document.getElementById('draft-status');
+        if(stat) {
+            stat.innerText = `Auto-Saved at ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            stat.style.color = 'var(--accent-neon)';
+            setTimeout(() => stat.style.color = 'var(--text-muted)', 2000);
+        }
+    };
+
+    window.loadDraftState = function() {
+        const saved = localStorage.getItem('scss_copilot_draft');
+        if (!saved) return;
+        try {
+            const draft = JSON.parse(saved);
+            let restoredCount = 0;
+            Object.keys(draft).forEach(key => {
+                const data = draft[key];
+                if (data.type === 'parent') {
+                    const tr = document.querySelector(`.parent-row[data-extracted-id="${key}"]`);
+                    if (tr) {
+                        tr.querySelector('.bulk-select').value = data.sel;
+                        tr.querySelector('.bulk-custom').value = data.cust;
+                        tr.classList.add('has-mapping');
+                        restoredCount++;
+                    }
+                } else if (data.type === 'child') {
+                    const parts = key.split('::');
+                    if(parts.length === 3) {
+                        const tr = document.querySelector(`.child-of-${parts[0]}[data-file="${parts[1]}"][data-line="${parts[2]}"]`);
+                        if (tr) {
+                            tr.querySelector('.child-select').value = data.sel;
+                            tr.querySelector('.child-input').value = data.cust;
+                            tr.classList.add('has-mapping');
+                            restoredCount++;
+                        }
+                    }
+                }
+            });
+            const stat = document.getElementById('draft-status');
+            if(stat && restoredCount > 0) stat.innerText = `Restored ${restoredCount} mappings.`;
+        } catch(e) { console.error("Failed to load draft data", e); }
+    };
 
     window.setMapping = function(btn, value) {
         const tr = btn.closest('tr');
@@ -1018,6 +1086,7 @@
             tr.querySelector('select.bulk-select').value = '';
             tr.classList.add('has-mapping');
         }
+        window.saveDraftState();
     };
     window.handleMappingChange = function(el) {
         const tr = el.closest('tr');
@@ -1028,6 +1097,7 @@
             if(el.classList.contains('bulk-custom') && cust.trim() !== '') tr.querySelector('.bulk-select').value = '';
             if(el.classList.contains('bulk-select') && sel !== '') tr.querySelector('.bulk-custom').value = '';
         } else tr.classList.remove('has-mapping');
+        window.saveDraftState();
     }
     window.handleChildMappingChange = function(el) {
         const tr = el.closest('tr');
@@ -1038,6 +1108,7 @@
             if(el.classList.contains('child-input') && cust.trim() !== '') tr.querySelector('.child-select').value = '';
             if(el.classList.contains('child-select') && sel !== '') tr.querySelector('.child-input').value = '';
         } else tr.classList.remove('has-mapping');
+        window.saveDraftState();
     }
 
     // --- FLAT COLOR CALCULATOR LOGIC ---
@@ -1104,6 +1175,19 @@
         new TokenManager();
         initFlatColorCalculator(); // Initialize Tool
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const clearBtn = document.getElementById('btn-clear-draft');
+        if(clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if(confirm("Are you sure you want to clear your current mapping draft? This cannot be undone.")) {
+                    localStorage.removeItem('scss_copilot_draft');
+                    location.reload();
+                }
+            });
+        }
+    });
+
     </script>
 </body>
 </html>
