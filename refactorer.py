@@ -12,6 +12,21 @@ def get_value_variations(val):
     variations = {val}
     no_space = val.replace(" ", "")
     variations.add(no_space)
+    # GLOBAL DECIMAL SHORTHANDS: Bidirectional 0.X and .X mutation
+    if '0.' in val:
+        variations.add(val.replace(' 0.', ' .').replace('-0.', '-.'))
+        if val.startswith('0.'): variations.add(val.replace('0.', '.', 1))
+    if '0.' in no_space:
+        variations.add(no_space.replace('-0.', '-.'))
+        if no_space.startswith('0.'): variations.add(no_space.replace('0.', '.', 1))
+
+    if '.' in val:
+        variations.add(val.replace(' .', ' 0.').replace('-.', '-0.'))
+        if val.startswith('.'): variations.add(val.replace('.', '0.', 1))
+    if '.' in no_space:
+        variations.add(no_space.replace('-.', '-0.'))
+        if no_space.startswith('.'): variations.add(no_space.replace('.', '0.', 1))
+
     if 'rgba' in no_space:
         variations.add(no_space.replace("0.", "."))
         variations.add(val.replace("0.", "."))
@@ -31,8 +46,6 @@ def find_all_raw_value_lines(scss_file_path, compiled_value, engine, expected_ca
     variations = get_value_variations(compiled_value)
     hits = []
     has_any_match = False
-
-    # Boundary constraints: Prevent matching partial values (e.g. 1.2 matching 1.25)
     boundary_chars = r'[a-zA-Z0-9\.\-%_#]'
 
     try:
